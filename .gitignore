@@ -60,10 +60,10 @@ typings/
 # next.js build output
 .next
 
-# /dist
-
+# building resources
 web-ext-artifacts/
-
 .web-extension-id
-
 hot
+dist/
+mix-manifest.json
+package-lock.json
