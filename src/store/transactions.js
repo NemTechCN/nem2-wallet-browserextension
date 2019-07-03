@@ -51,6 +51,9 @@ const getters = {
 };
 
 const mutations = {
+  setErroredTransactions(state, transaction) {
+    state.erroredTransactions.push(transaction);
+  },
   setAccountTransactions(state, { wallet, transactions }) {
     if (!state.transactions) state.transactions = [];
     Vue.set(state.transactions, wallet.name, transactions);
@@ -365,12 +368,13 @@ const actions = {
     );
   },
 
-  TRIGGER_ERRORED_TRANSACTION_SNACKBAR({ dispatch }, tx) {
+  TRIGGER_ERRORED_TRANSACTION_SNACKBAR({ dispatch, commit }, tx) {
+    commit('setErroredTransactions', tx.transaction);
     dispatch(
       'application/SET_SNACKBAR_TEXT',
       {
         bool: true,
-        text: `transaction announced failed for ${tx.type1}`,
+        text: `${txTypeNameFromTypeId(Number(tx.transaction.type))} transaction announced failed for ${tx.type1}`,
         color: 'red',
       },
       { root: true },

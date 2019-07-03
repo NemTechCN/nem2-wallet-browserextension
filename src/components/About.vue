@@ -37,10 +37,10 @@
       >{{ $t('is-available-as-a-Mozilla-Firefox-extension') }}</a>
     </p>
     <p>
-      {{ $t('It is also') }} <a
+      {{ $t('It-is-also') }} <a
         :href="LINKS.webWallet"
         target="_new"
-      >{{ $t('deployed-as-a-web-version') }}.</a>
+      >{{ $t('deployed-as-a-web-version') }}</a>
       {{ $t('Please-note-that-URI-transaction-handling-can-only-be-done-with-the-web-extension') }}
     </p>
     <v-layout column>
@@ -54,7 +54,7 @@
           <a
             :href="LINKS.repo"
             class="mx-1"
-          >{{ LINKS.repo }}</a> {{ $t('licenced under') }}
+          >{{ LINKS.repo }}</a> {{ $t('licenced-under') }}
           <img
             :src="LINKS.licenceImage"
             class="ml-1"

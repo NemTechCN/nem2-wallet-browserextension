@@ -64,32 +64,34 @@ export default {
   computed: {
     results() {
       const that = this;
-      return this.txSendData.map((result) => {
-        const { txHash } = result;
-        const node = this.$store.state.application.activeNode;
-        const url = `${node}/transaction/${txHash}/status`;
-        request(url, (error, response, body) => {
-          if (!error && response.statusCode === 200) {
-            const res = JSON.parse(body);
-            if (res.group === 'failed') {
-              that.$store.dispatch(
-                'transactions/TRIGGER_ERRORED_TRANSACTION_SNACKBAR',
-                { type1: ` ${res.status}`, transaction: result.transaction },
-              );
-            }
-          } else {
+      const result = this.txSendData[this.txSendData.length - 1];
+      if (!result) {
+        return false;
+      }
+      const { txHash } = result;
+      const node = this.$store.state.application.activeNode;
+      const url = `${node}/transaction/${txHash}/status`;
+      request(url, (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          const res = JSON.parse(body);
+          if (res.group === 'failed') {
             that.$store.dispatch(
               'transactions/TRIGGER_ERRORED_TRANSACTION_SNACKBAR',
-              { type1: ' error in announce', transaction: result.transaction },
+              { type1: ` ${res.status}`, transaction: result.transaction },
             );
-            console.error(error);
           }
-        });
-        return {
-          txHash: result.txHash,
-          txStatusUrl: `${result.nodeURL}/transaction/${result.txHash}/status`,
-        };
+        } else {
+          that.$store.dispatch(
+            'transactions/TRIGGER_ERRORED_TRANSACTION_SNACKBAR',
+            { type1: ' error in announce', transaction: result.transaction },
+          );
+          console.error(error);
+        }
       });
+      return this.txSendData.map(res => ({
+        txHash: res.txHash,
+        txStatusUrl: `${res.nodeURL}/transaction/${res.txHash}/status`,
+      }));
     },
   },
 };
