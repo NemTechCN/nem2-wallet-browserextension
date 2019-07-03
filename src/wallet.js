@@ -28,7 +28,6 @@ import Transact from './components/transactions/Transact.vue';
 import Namespace from './components/namespace/Namespace.vue';
 import Asset from './components/asset/Asset.vue';
 import Wallet from './components/wallet/Wallet.vue';
-
 import DeveloperMode from './components/developermode/DeveloperMode.vue';
 import About from './components/About.vue';
 import store from './store';
@@ -38,6 +37,7 @@ import AccountLink from './components/accountLink/AccountLink.vue';
 
 import i18n from './plugins/i18n';
 
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import 'vuetify/dist/vuetify.min.css';
 
 const routes = [

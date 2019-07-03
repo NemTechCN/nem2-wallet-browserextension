@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "laravel-mix": "^4.0.14",
+    "material-design-icons-iconfont": "^5.0.1",
     "nem2-hd-wallets": "^0.4.0",
     "nem2-library": "^0.9.14",
     "nem2-qr-library": "^0.3.0",
