@@ -60,11 +60,11 @@
                   padding: 10px;"
               >
                 <span class="clearfix">
-                  Type: {{ uriTx.txType }}
+                  {{ $t('Type') }}: {{ uriTx.txType }}
                 </span>
 
                 <span class="clearfix">
-                  To: {{ uriTx.txRecipient }}
+                  {{ $t('To') }}: {{ uriTx.txRecipient }}
                 </span>
 
                 <template v-for="(asset, j) in uriTx.formattedMosaics">
@@ -79,11 +79,11 @@
                   v-if="uriTx.transaction.message.payload !== ''"
                   class="clearfix"
                 >
-                  Message: {{ uriTx.transaction.message.payload }}
+                  {{ $('Message') }}: {{ uriTx.transaction.message.payload }}
                 </span>
 
                 <span class="clearfix">
-                  Generation Hash: {{ uriTx.generationHash }}
+                  {{ $t('Generation-Hash') }}: {{ uriTx.generationHash }}
                 </span>
 
                 <span class="clearfix">
@@ -123,7 +123,7 @@
               :disabled="wallet.activeWallet.isWatchOnly"
               @click="toggleDialog = true"
             >
-              Accept transaction
+              {{ $t('Accept-transaction') }}
             </v-btn>
           </v-card-actions>
           <v-divider
@@ -152,7 +152,7 @@
               <v-icon>person_outline</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>Recipient: {{ uriTx.txRecipient }}</v-list-tile-title>
+              <v-list-tile-title>{{ $t('Recipient') }}: {{ uriTx.txRecipient }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
 
@@ -161,7 +161,7 @@
               <v-icon>message</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>Message: {{ uriTx.txMessage }}</v-list-tile-title>
+              <v-list-tile-title>{{ $t('Message') }}: {{ uriTx.txMessage }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile-tile>
         </v-list>
@@ -207,16 +207,16 @@ export default {
   data() {
     return {
       toggleDialog: false,
-      confirmationTitle: 'Are sure you want to accept this transaction?',
-      body: 'This transaction came from a URI link, and is to be sent to an exernal service.  Please confirm all details once more before sending.',
+      confirmationTitle: this.$t('Are-sure-you-want-to-accept-this'),
+      body: this.$t('This-transaction-came-from-a-URI'),
     };
   },
   computed: {
     ...mapState(['wallet']),
     title() {
       return this.listType === 'uriToValidate'
-        ? 'URI transactions to validate'
-        : 'List of created URI invoices';
+        ? this.$t('URI-transactions-to-validate')
+        : this.$t('List-of-created-URI-invoices');
     },
   },
   methods: {

@@ -24,7 +24,7 @@
       <v-toolbar card>
         <v-card-title primary-title>
           <h3 class="headline mb-3">
-            Generate a new wallet
+            {{ $t('Generate-a-new-wallet') }}
           </h3>
         </v-card-title>
         <v-spacer />
@@ -39,7 +39,7 @@
         <v-text-field
           v-model="node"
           class="ma-0 pa-0"
-          label="NEM2 default node URL"
+          :label="$t('NEM2-default-node-URL')"
         />
 
         <v-select
@@ -54,19 +54,19 @@
         <v-text-field
           v-model="walletName"
           class="ma-0 pa-0"
-          label="Wallet name"
+          :label="$t('Wallet-name')"
         />
 
         <v-text-field
           v-model.lazy="password"
           class="ma-0 pa-0"
-          label="Password (min. 8 char)"
+          :label="$t('Password')"
         />
 
         <v-switch
           v-model="keepUnlocked"
           class="ma-0 pa-0"
-          label="Keep the wallet unlocked during this session?"
+          :label="$t('Keep-the-wallet-unlocked-session')"
         />
 
         <v-divider class="mt-4" />
@@ -74,21 +74,21 @@
         <v-text-field
           :value="account ? account.address.pretty() : ''"
           class="mt-4 pt-4 monospaced"
-          label="address"
+          :label="$t('Address')"
           readonly
         />
 
         <v-text-field
           :value="account ? account.publicKey : ''"
           class="ma-0 pa-0 monospaced"
-          label="public key"
+          :label="$t('Public-Key')"
           readonly
         />
 
         <v-text-field
           :value="account ? account.privateKey : ''"
           class="ma-0 pa-0 monospaced"
-          label="private key"
+          :label="$t('Private-Key')"
           readonly
         />
       </v-card-text>

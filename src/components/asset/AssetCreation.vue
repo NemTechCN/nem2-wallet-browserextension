@@ -24,7 +24,7 @@
       <v-toolbar card>
         <v-card-title primary-title>
           <h3 class="headline mb-3">
-            Create an asset
+            {{ $t('Create-an-asset') }}
           </h3>
         </v-card-title>
       </v-toolbar>
@@ -32,37 +32,40 @@
         <v-text-field
           v-model="supply"
           class="ma-0 pa-0 mt-3"
-          label="Supply (unit, Integer in the range of 0 and 9,000,000,000)"
+          :label="$t('Supply')"
           type="number"
         />
+        <!-- hint="(unit, Integer in the range of 0 and 9,000,000,000)" -->
         <v-text-field
           v-model="divisibility"
           class="ma-0 pa-0"
-          label="Divisibility (unit, Integer in the range of 0 and 6)"
+          :label="$t('Divisibility')"
           type="number"
         />
+        <!-- (unit, Integer in the range of 0 and 6) -->
         <v-text-field
           v-model="duration"
           class="ma-0 pa-0"
-          label="Duration (blocks, Fill 0 for unlimited duration)"
+          :label="$t('Duration')"
           type="number"
         />
+        <!-- (blocks, Fill 0 for unlimited duration) -->
         <v-text-field
           v-model="generationHash"
           class="ma-0 pa-0"
-          label="Generation Hash"
+          :label="$t('Generation-Hash')"
         />
         <v-switch
           v-model="transferable"
-          label="Transferable"
+          :label="$t('Transferable')"
         />
         <v-switch
           v-model="supplyMutable"
-          label="Mutable supply"
+          :label="$t('Mutable-supply')"
         />
         <v-switch
           v-model="levyMutable"
-          label="Mutable levy"
+          :label="$t('Mutable-levy')"
         />
       </v-card-text>
       <v-layout column>
@@ -76,14 +79,14 @@
           flat
           @click="$emit('close')"
         >
-          close
+          {{ $t('close') }}
         </v-btn>
         <v-btn
           :disabled="disabledSendTransaction"
           color="primary mx-0"
           @click="createAsset"
         >
-          Send Transaction
+          {{ $t('Send-Transaction') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -217,32 +220,32 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Supply',
+          key: this.$t('Supply'),
           value: this.supply,
         },
         {
           icon: 'add',
-          key: 'Divisibility',
+          key: this.$t('Divisibility'),
           value: this.divisibility,
         },
         {
           icon: 'add',
-          key: 'Duration (blocks)',
+          key: this.$t('Duration'),
           value: this.duration === 0 ? 'unlimited' : this.duration,
         },
         {
           icon: 'add',
-          key: 'Mutable supply',
+          key: this.$t('Mutable-supply'),
           value: this.supplyMutable,
         },
         {
           icon: 'add',
-          key: 'Mutable levy',
+          key: this.$t('Mutable-levy'),
           value: this.levyMutable,
         },
         {
           icon: 'add',
-          key: 'Transferable',
+          key: this.$t('Transferable'),
           value: this.transferable,
         },
       ];
@@ -297,7 +300,6 @@ export default {
       console.error(error);
     },
   },
-
 };
 
 </script>

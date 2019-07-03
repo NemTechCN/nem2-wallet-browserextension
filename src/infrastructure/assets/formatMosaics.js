@@ -33,7 +33,8 @@ const sortAlpha = (arr) => {
 };
 
 export const sortMosaics = (mosaics) => {
-  const catCurrency = typeof mosaics.find(m => m.name === 'cat.currency') !== 'undefined'
+  const catCurrency = typeof mosaics
+    .find(m => m.name === 'cat.currency') !== 'undefined'
     ? [mosaics.find(m => m.name === 'cat.currency')]
     : [];
 

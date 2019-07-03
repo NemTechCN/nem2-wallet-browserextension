@@ -36,7 +36,7 @@
           card
           prominent
         >
-          <v-toolbar-title>Assets</v-toolbar-title>
+          <v-toolbar-title>{{ $t('Assets') }}</v-toolbar-title>
 
           <v-spacer />
 
@@ -71,7 +71,7 @@
           && transactions.transactions
           && transactions.transactions[wallet.activeWallet.name]"
         preset-filter="Mosaic"
-        title="Recent mosaic transactions"
+        :title="$t('Recent-mosaic-transactions')"
       />
     </v-flex>
     <PasswordInput
@@ -124,5 +124,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>

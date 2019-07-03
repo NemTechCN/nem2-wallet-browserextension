@@ -23,18 +23,18 @@
     <v-card>
       <v-card-title primary-title>
         <h3 class="headline mb-3">
-          Import a wallet from private key
+          {{ $t('Import-a-wallet-from-private-key') }}
         </h3>
         <p class="mb-0 clearfix">
-          This wallet will be saved in your browser storage,&nbsp;
-          safely encrypted with your password.
+          {{ $t('This-wallet-will-be-saved-in-your-browser-storage') }}&nbsp;
+          {{ $t('safely-encrypted-with-your-password.') }}
         </p>
       </v-card-title>
       <v-card-text>
         <v-text-field
           v-model="node"
           class="ma-0 pa-0"
-          label="NEM2 default node URL"
+          :label="$t('NEM2-default-node-URL')"
         >
           {{ node }}
         </v-text-field>
@@ -51,7 +51,7 @@
         <v-text-field
           v-model="walletName"
           class="ma-0 pa-0"
-          label="Wallet name"
+          :label="$t('Wallet-name')"
         />
 
         <v-text-field
@@ -63,13 +63,13 @@
         <v-text-field
           v-model.lazy="password"
           class="ma-0 pa-0"
-          label="Password (min. 8 char)"
+          :label="$t('Password')"
         />
 
         <v-switch
           v-model="keepUnlocked"
           class="ma-0 pa-0"
-          label="Keep the wallet unlocked during this session?"
+          :label="$t('Keep-the-wallet-unlocked-session')"
         />
 
         <div
@@ -81,7 +81,7 @@
             v-if="isValidAccount"
             :value="isValidAccount ? account.address.pretty() : ''"
             class="mt-4 pt-4 monospaced"
-            label="Address"
+            :label="$t('Address')"
             readonly
           />
 
@@ -89,7 +89,7 @@
             v-if="isValidAccount"
             :value="isValidAccount ? account.publicKey : ''"
             class="ma-0 pa-0 monospaced"
-            label="$t('Public-Key')"
+            :label="$t('Public-Key')"
             readonly
           />
         </div>

@@ -26,8 +26,9 @@
           <h3 class="headline mb-3">
             {{
               activeAsset.name
-                ? `Remove the alias ${activeAsset.name} from the asset ${activeAsset.id}`
-                : `Add an alias to the asset: ${activeAsset.id}`
+                ? $t('Remove-the-alias-from-the-asset',
+                     { assetName:activeAsset.name, assetId:activeAsset.id })
+                : `${$t('Add-an-alias-to-the-asset')}: ${activeAsset.id}`
             }}
           </h3>
         </v-card-title>
@@ -37,8 +38,8 @@
           v-if="namespaces.namespaces[wallet.activeWallet.name]
             && namespaces.namespaces[wallet.activeWallet.name].length === 0"
         >
-          This wallet has no namespace.
-          A namespace is required to add a namespace to an asset.
+          {{ $t('This-wallet-has-no-namespace') }}.
+          {{ $t('A-namespace-is-required-to-add-a-namespace-to-an-asset') }}.
         </div>
         <div
           v-if="namespaces.namespaces[wallet.activeWallet.name]
@@ -49,12 +50,12 @@
             row
           >
             <template v-slot:label>
-              <div>Link action: </div>
+              <div>{{ $t('Link-Action') }}: </div>
             </template>
             <v-radio
               v-for="l in aliasActionTypes"
               :key="l.type"
-              :label="l.label"
+              :label="$t(l.label)"
               :value="l.type"
               disabled
             />
@@ -68,7 +69,7 @@
               }))"
             item-text="display"
             item-value="name"
-            label="Namespace"
+            :label="$t('Namespace')"
             :disabled="activeAsset.name ? true : false"
             required
           />
@@ -89,7 +90,7 @@
               color="primary mx-0"
               @click="showDialog"
             >
-              Send Transaction
+              {{ $t('Send-Transaction') }}
             </v-btn>
           </v-card-actions>
         </div>
@@ -207,19 +208,19 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Mosaic',
+          key: this.$t('Mosaic'),
           value: this.activeAsset.name
             ? `${this.activeAsset.name} (${this.activeAsset.id})`
             : this.activeAsset.id,
         },
         {
           icon: 'add',
-          key: 'Link Action',
-          value: this.aliasActionType === 1 ? 'Unlink' : 'Link',
+          key: this.$t('Link-Action'),
+          value: this.$t(this.aliasActionType === 1 ? 'Unlink' : 'Link'),
         },
         {
           icon: 'add',
-          key: 'Namespace',
+          key: this.$t('Namespace'),
           value: this.chosenNamespace,
         },
       ];

@@ -23,7 +23,7 @@
     <v-card>
       <v-card-title primary-title>
         <h3 class="headline mb-3">
-          Transaction filters
+          {{ $t('Transaction-filters') }}
         </h3>
       </v-card-title>
       <v-card-text>

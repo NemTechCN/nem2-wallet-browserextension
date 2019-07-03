@@ -19,17 +19,17 @@
   <v-card>
     <v-card-title>
       <span class="title">
-        Namespace Tools
+        {{ $t('Namespace-Tools') }}
       </span>
     </v-card-title>
     <v-card-text>
       <v-flex xs12>
         <span class="subheading">
-          Namespace Id
+          {{ $t('Namespace-Id') }}
         </span>
         <v-text-field
           v-model="namespaceString"
-          label="Namespace name"
+          :label="$t('Namespace-name')"
           placeholder="nem.xem"
           :error="namespaceErr"
           :error-messages="namespaceErrMessage"
@@ -37,12 +37,12 @@
         />
         <v-text-field
           v-model="namespaceIdUint64"
-          label="Namespace Id (Uint64)"
+          label="`${$t('Namespace-Id')} (Uint64)`"
           @change="namespaceGeneratorUint64"
         />
         <v-text-field
           v-model="namespaceIdHex"
-          label="Namespace Id (Hex)"
+          :label="`${$t('Namespace-Id')} (Hex)`"
           @change="namespaceGeneratorHex"
         />
       </v-flex>
@@ -53,17 +53,17 @@
         </span>
         <v-text-field
           v-model="mosaicOwner"
-          label="Mosaic Owner Public Key"
+          :label="$t('Mosaic-Owner-Public-Key')"
           @change="mosaicGenerator"
         />
         <v-text-field
           v-model="mosaicNonce"
-          label="Mosaic Nonce"
+          :label="$t('Mosaic-Nonce')"
           @change="mosaicGenerator"
         />
         <v-text-field
           v-model="mosaicId"
-          label="Mosaic Id"
+          :label="$t('Mosaic-Id')"
         />
       </v-flex>
     </v-card-text>
@@ -121,7 +121,7 @@ export default {
         const parsedUint64Id = this.namespaceIdUint64.replace(/(\[|\])/g, '').split(',').map(x => Number(x));
         const namespace = new NamespaceId(parsedUint64Id);
         this.namespaceIdHex = namespace.toHex().toUpperCase();
-        this.showError('Unable to calculate name from Id');
+        this.showError(this.$t('Unable-to-calculate-name-from-Id'));
       } catch (e) {
         this.showError(e);
       }
@@ -132,7 +132,7 @@ export default {
         const parsedHexId = Id.fromHex(this.namespaceIdHex);
         const namespace = new NamespaceId(parsedHexId.toDTO());
         this.namespaceIdUint64 = `[${namespace.id.toDTO()}]`;
-        this.showError('Unable to calculate name from Id');
+        this.showError(this.$t('Unable-to-calculate-name-from-Id'));
       } catch (e) {
         this.showError(e);
       }

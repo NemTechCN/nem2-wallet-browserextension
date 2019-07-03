@@ -23,7 +23,7 @@
     <v-card>
       <v-card-title primary-title>
         <h3 class="headline mb-3">
-          Unlock {{ walletName }}
+          {{ $t('Unlock') }} {{ walletName }}
         </h3>
       </v-card-title>
       <v-card-text>
@@ -31,8 +31,7 @@
           v-if="message"
           style="
             margin-bottom: 20px;
-            display: block;
-          "
+            display: block;"
         >
           {{ message }}
         </span>
@@ -40,7 +39,7 @@
           v-model="password"
           :append-icon="show1 ? 'visibility' : 'visibility_off'"
           :type="show1 ? 'text' : 'password'"
-          label="Password"
+          :label="$t('Password')"
           hint="At least 8 characters"
           counter
           @click:append="show1 = !show1"
@@ -51,14 +50,14 @@
             flat
             @click.stop="$emit('close')"
           >
-            Close
+            {{ $t('Close') }}
           </v-btn>
           <v-btn
             :disabled="!validPassword"
             color="primary mx-0"
             @click="unlock"
           >
-            Unlock wallet
+            {{ $t('Unlock-wallet') }}
           </v-btn>
         </v-card-actions>
       </v-card-text>

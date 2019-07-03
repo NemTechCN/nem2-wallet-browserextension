@@ -69,7 +69,7 @@
             class="pointer"
             @click.stop="goToWallet"
           >
-            My wallets
+            {{ $t('My-wallets') }}
           </v-list-tile-title>
         </v-list-tile>
         <v-list-tile>
@@ -138,8 +138,7 @@
           display: block;
           float: left;
           height: 32px;
-          padding-top: 6px;
-        "
+          padding-top: 6px;"
         >
           {{ application.listenerStatus === 'OK'
             ? application.blockNumber.toLocaleString()
@@ -154,8 +153,7 @@
             padding-top: 2px;
             height: 32px;
             display: block;
-            float: left;
-          "
+            float: left;"
           right
         >
           power
@@ -168,8 +166,7 @@
             padding-top: 2px;
             height: 32px;
             display: block;
-            float: left;
-          "
+            float: left;"
           right
         >
           power_off

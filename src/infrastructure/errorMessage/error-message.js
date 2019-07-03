@@ -22,4 +22,6 @@ export default {
   APPROVAL_TOO_BIG: 'removal delta is too big',
   TOO_LESS_COSIGNERS: 'cosigner list will be less than 0 after this transaction',
   TOO_MANY_COSIGNERS: 'cosigner list will be more than 10 after this transaction',
+  ADDRESS_NOT_KNOWN: 'This address is not known by the network',
+  CONNECTION_ERROR: 'Connection error, please verify your internet connection and the endpoint you are using',
 };

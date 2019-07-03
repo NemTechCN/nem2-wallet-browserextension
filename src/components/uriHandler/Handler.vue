@@ -37,8 +37,8 @@
           :value="true"
           type="error"
         >
-          CAUTION:  You are about to sign a transaction for an external service.&nbsp;
-          Exercise extreme caution and verify all details before proceeding.
+          {{ $t('CAUTION:-You-are-about-to-sign') }}&nbsp;
+          {{ $t('Exercise-extreme-caution-and-verify') }}
         </v-alert>
       </v-flex>
       <v-flex

@@ -1,37 +1,37 @@
 <template>
   <v-layout
-          column
-          class="mt-2 mb-3"
+    column
+    class="mt-2 mb-3"
   >
     <v-container v-show="!multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts">
-      this account does not own any multisig to modify
+      {{ $t('This-account-does-not-own-any-multisig-to-modify') }}
     </v-container>
     <v-container v-show="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts">
       <v-layout
-              row
-              wrap
+        row
+        wrap
       >
         <v-flex
-                v-if="multisig.loading_getMultisigInfo"
-                xs12
+          v-if="multisig.loading_getMultisigInfo"
+          xs12
         >
           <v-progress-linear
-                  :indeterminate="true"
+            :indeterminate="true"
           />
         </v-flex>
       </v-layout>
       <v-layout
-              v-if="!multisig.loading_getMultisigInfo
+        v-if="!multisig.loading_getMultisigInfo
           && multisig.multisigInfo[wallet.activeWallet.name]"
-              row
+        row
       >
         <v-flex xs12>
           <v-select
-                  v-model="currentMultisigPublicKey"
-                  label="Multisig Account Publickey"
-                  :items="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
-                  item-text="publicKey"
-                  solo
+            v-model="currentMultisigPublicKey"
+            :label="$t('Multisig-Account-Public-Key')"
+            :items="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
+            item-text="publicKey"
+            solo
           />
         </v-flex>
       </v-layout>
@@ -39,12 +39,12 @@
       <v-layout>
         <v-flex xs12>
           <v-text-field
-                  v-model="approvalDelta"
-                  label="Approval Delta"
-                  type="number"
-                  required
-                  number
-                  class="ma-0 pa-0"
+            v-model="approvalDelta"
+            :label="$t('Approval-Delta')"
+            type="number"
+            required
+            number
+            class="ma-0 pa-0"
           />
         </v-flex>
       </v-layout>
@@ -52,12 +52,12 @@
       <v-layout>
         <v-flex xs12>
           <v-text-field
-                  v-model="removalDelta"
-                  label="Removal Delta"
-                  type="number"
-                  required
-                  number
-                  class="ma-0 pa-0"
+            v-model="removalDelta"
+            :label="$t('Removal-Delta')"
+            type="number"
+            required
+            number
+            class="ma-0 pa-0"
           />
         </v-flex>
       </v-layout>
@@ -65,12 +65,12 @@
       <v-layout>
         <v-flex xs12>
           <v-text-field
-                  v-model="maxFee"
-                  class="ma-0 pa-0"
-                  label="Max Fee"
-                  type="number"
-                  required
-                  number
+            v-model="maxFee"
+            class="ma-0 pa-0"
+            :label="$t('Max-Fee')"
+            type="number"
+            required
+            number
           />
         </v-flex>
       </v-layout>
@@ -78,100 +78,100 @@
       <v-layout>
         <v-flex xs12>
           <v-text-field
-                  v-model="generationHash"
-                  class="ma-0 pa-0"
-                  label="Generation Hash"
-                  required
+            v-model="generationHash"
+            class="ma-0 pa-0"
+            :label="$t('Generation Hash')"
+            required
           />
         </v-flex>
       </v-layout>
 
-<!--      <v-layout-->
-<!--              v-if="showLockFunds"-->
-<!--              row-->
-<!--      >-->
-<!--        <v-flex xs12>-->
-<!--          <v-subheader>Lock Funds Transacion</v-subheader>-->
-<!--        </v-flex>-->
-<!--      </v-layout>-->
-<!--      <v-layout-->
-<!--              v-if="showLockFunds"-->
-<!--              row-->
-<!--      >-->
-<!--        <v-flex xs6>-->
-<!--          <v-text-field-->
-<!--                  v-model="lockFundsMosaicType"-->
-<!--                  class="ma-0 pa-0"-->
-<!--                  required-->
-<!--                  disabled-->
-<!--          />-->
-<!--        </v-flex>-->
-<!--        <v-flex xs6>-->
-<!--          <v-text-field-->
-<!--                  v-model="lockFundsMosaicAmount"-->
-<!--                  class="ma-0 pa-0"-->
-<!--                  type="number"-->
-<!--                  required-->
-<!--                  disabled-->
-<!--                  number-->
-<!--          />-->
-<!--        </v-flex>-->
-<!--      </v-layout>-->
-<!--      <v-layout v-if="showLockFunds">-->
-<!--        <v-flex xs12>-->
-<!--          <v-text-field-->
-<!--                  v-model="lockFundsDuration"-->
-<!--                  label="Lock Funds Duration In Blocks"-->
-<!--                  class="ma-0 pa-0"-->
-<!--                  type="number"-->
-<!--                  required-->
-<!--                  number-->
-<!--          />-->
-<!--        </v-flex>-->
-<!--      </v-layout>-->
-<!--      <v-layout v-if="showLockFunds">-->
-<!--        <v-flex xs12>-->
-<!--          <v-text-field-->
-<!--                  v-model="lockFundsMaxFee"-->
-<!--                  label="Lock Funds Max Fee"-->
-<!--                  class="ma-0 pa-0"-->
-<!--                  type="number"-->
-<!--                  required-->
-<!--                  number-->
-<!--          />-->
-<!--        </v-flex>-->
-<!--      </v-layout>-->
+      <!--      <v-layout-->
+      <!--              v-if="showLockFunds"-->
+      <!--              row-->
+      <!--      >-->
+      <!--        <v-flex xs12>-->
+      <!--          <v-subheader>Lock Funds Transacion</v-subheader>-->
+      <!--        </v-flex>-->
+      <!--      </v-layout>-->
+      <!--      <v-layout-->
+      <!--              v-if="showLockFunds"-->
+      <!--              row-->
+      <!--      >-->
+      <!--        <v-flex xs6>-->
+      <!--          <v-text-field-->
+      <!--                  v-model="lockFundsMosaicType"-->
+      <!--                  class="ma-0 pa-0"-->
+      <!--                  required-->
+      <!--                  disabled-->
+      <!--          />-->
+      <!--        </v-flex>-->
+      <!--        <v-flex xs6>-->
+      <!--          <v-text-field-->
+      <!--                  v-model="lockFundsMosaicAmount"-->
+      <!--                  class="ma-0 pa-0"-->
+      <!--                  type="number"-->
+      <!--                  required-->
+      <!--                  disabled-->
+      <!--                  number-->
+      <!--          />-->
+      <!--        </v-flex>-->
+      <!--      </v-layout>-->
+      <!--      <v-layout v-if="showLockFunds">-->
+      <!--        <v-flex xs12>-->
+      <!--          <v-text-field-->
+      <!--                  v-model="lockFundsDuration"-->
+      <!--                  label="Lock Funds Duration In Blocks"-->
+      <!--                  class="ma-0 pa-0"-->
+      <!--                  type="number"-->
+      <!--                  required-->
+      <!--                  number-->
+      <!--          />-->
+      <!--        </v-flex>-->
+      <!--      </v-layout>-->
+      <!--      <v-layout v-if="showLockFunds">-->
+      <!--        <v-flex xs12>-->
+      <!--          <v-text-field-->
+      <!--                  v-model="lockFundsMaxFee"-->
+      <!--                  label="Lock Funds Max Fee"-->
+      <!--                  class="ma-0 pa-0"-->
+      <!--                  type="number"-->
+      <!--                  required-->
+      <!--                  number-->
+      <!--          />-->
+      <!--        </v-flex>-->
+      <!--      </v-layout>-->
 
       <v-layout>
         <v-flex sm>
           <v-layout row>
             <v-flex offset-xs1>
               <v-btn
-                      dark
-                      :color="isRemove ?'red':'primary' "
-                      @click="isRemove = !isRemove"
+                dark
+                :color="isRemove ? 'red' : 'primary'"
+                @click="isRemove = !isRemove"
               >
-                {{ isRemove?'Remove':'Add'}}
+                {{ isRemove? $t('Remove') : $t('Add') }}
                 <v-icon
-                        dark
-                        right
+                  dark
+                  right
                 >
-                  {{ isRemove ?'remove_circle_outline':'add_circle_outline' }}
+                  {{ isRemove ? 'remove_circle_outline' : 'add_circle_outline' }}
                 </v-icon>
               </v-btn>
             </v-flex>
             <v-flex xs6>
               <v-text-field
-                      v-model="currentCosignatoryPublicKey"
-                      placeholder="input cosignatory publickey"
-                      solo
+                v-model="currentCosignatoryPublicKey"
+                :placeholder="$t('Input-cosignatory-publickey')"
+                solo
               />
             </v-flex>
             <v-flex xs3>
               <v-btn
-                      :disabled="currentCosignatoryPublicKey === ''"
-                      color="primary"
-                      @click="addCosignatory"
+                :disabled="currentCosignatoryPublicKey === ''"
+                color="primary"
+                @click="addCosignatory"
               >
                 <v-icon>add</v-icon>
               </v-btn>
@@ -179,8 +179,8 @@
           </v-layout>
           <template v-for="(cosignatory, index) in cosignatoryList">
             <v-list
-                    :key="index"
-                    two-line
+              :key="index"
+              two-line
             >
               <v-list-tile>
                 <v-list-tile-action>
@@ -190,14 +190,14 @@
                   <v-subheader>
                     {{ cosignatory.modificationType == 0 ? 'add':'remove' }}
                   </v-subheader>
-                  cosignatory publickey:
+                  {{ $t('Cosignatory-s-public-key') }}:
                   {{ cosignatory.cosignatoryPublicKey }}
                 </v-list-tile-content>
                 <v-btn
-                        fab
-                        small
-                        color="error"
-                        @click="removeCosignatory(index)"
+                  fab
+                  small
+                  color="error"
+                  @click="removeCosignatory(index)"
                 >
                   <v-icon>remove</v-icon>
                 </v-btn>
@@ -209,29 +209,30 @@
 
       <v-layout>
         <v-layout
-                row
-                justify-center
-                align-center
+          row
+          justify-center
+          align-center
         >
           <v-btn
-                  :disabled="disabledSendLockFundsTransaction"
-                  @click="showDialog">
+            :disabled="disabledSendLockFundsTransaction"
+            @click="showDialog"
+          >
             send
           </v-btn>
         </v-layout>
 
         <Confirmation
-                v-model="isDialogShow"
-                :transactions="transactions"
-                :transactionType="transactionType"
-                :generationHash="generationHash"
-                @sent="txSent"
-                @error="txError"
+          v-model="isDialogShow"
+          :transactions="transactions"
+          :transaction-type="transactionType"
+          :generation-hash="generationHash"
+          @sent="txSent"
+          @error="txError"
         >
           <v-list>
             <v-list-tile
-                    v-for="detail in dialogDetails"
-                    :key="detail.key"
+              v-for="detail in dialogDetails"
+              :key="detail.key"
             >
               <v-list-tile-action>
                 <v-icon>{{ detail.icon }}</v-icon>
@@ -244,18 +245,19 @@
             </v-list-tile>
 
             <v-list-tile>
-              cosignatory list：
+              {{ $t('cosignatory-list') }}：
             </v-list-tile>
             <v-list-tile
-                    v-for="(cosignatory,index) in cosignatoryList"
-                    :key="index"
+              v-for="(cosignatory,index) in cosignatoryList"
+              :key="index"
             >
               <v-list-tile-action>
                 <v-icon>add</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  {{ cosignatory.modificationType == 0 ? 'add': 'remove' }}:
+                  {{ cosignatory.modificationType == 0
+                    ? $t('Add'): $t('Remove') }}:
                   {{ cosignatory.cosignatoryPublicKey }}
                 </v-list-tile-title>
               </v-list-tile-content>
@@ -266,16 +268,16 @@
 
       <v-layout column>
         <SendConfirmation
-            :tx-send-data="txSendResults"
+          :tx-send-data="txSendResults"
         />
         <v-dialog
-                v-model="isShowErrorMessage"
-                width="500"
+          v-model="isShowErrorMessage"
+          width="500"
         >
-        <ErrorMessageComponent
-            :errorMessage = 'errorMessage'
-            @hideErrorMessage = 'hideErrorMessage'
-        />
+          <ErrorMessageComponent
+            :error-message="errorMessage"
+            @hideErrorMessage="hideErrorMessage"
+          />
         </v-dialog>
       </v-layout>
     </v-container>
@@ -391,7 +393,7 @@ export default {
       removalDelta: 0,
       approvalDelta: 0,
       isRemove: false,
-      currentCosignatoryPublicKey: '5FA48DA997E605323BCD579ABD6FC996B18DF3289A488A12E3C9CE27C10AAC41',
+      currentCosignatoryPublicKey: '',
       cosignatoryList: [],
       cosignatoryAddList: [],
       cosignatoryDeleteList: [],
@@ -476,22 +478,22 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Removal Delta',
+          key: this.$t('Removal Delta'),
           value: this.removalDelta,
         },
         {
           icon: 'add',
-          key: 'Approval Delta',
+          key: this.$t('Approval Delta'),
           value: this.approvalDelta,
         },
         {
           icon: 'add',
-          key: 'Max Fee',
+          key: this.$t('Max-Fee'),
           value: this.maxFee,
         },
         {
           icon: 'add',
-          key: 'Generation Hash',
+          key: this.$t('Generation-Hash'),
           value: this.generationHash,
         },
       ];
@@ -543,7 +545,8 @@ export default {
         Number(minRemovalDelta),
         cosignatories.map(co => new MultisigCosignatoryModification(
           co.modificationType
-            ? MultisigCosignatoryModificationType.Remove : MultisigCosignatoryModificationType.Add,
+            ? MultisigCosignatoryModificationType.Remove
+            : MultisigCosignatoryModificationType.Add,
           PublicAccount.createFromPublicKey(co.cosignatoryPublicKey, network),
         )),
         network,
@@ -556,7 +559,10 @@ export default {
         ],
         network,
       );
-      const signedTransaction = account.sign(aggregateTransaction, this.generationHash);
+      const signedTransaction = account.sign(
+        aggregateTransaction,
+        this.generationHash,
+      );
       const hashLockTransaction = HashLockTransaction.create(
         Deadline.create(),
         NetworkCurrencyMosaic.createRelative(10),

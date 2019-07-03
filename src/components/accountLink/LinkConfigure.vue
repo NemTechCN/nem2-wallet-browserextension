@@ -14,7 +14,7 @@
             row
           >
             <template v-slot:label>
-              <div>Link action: </div>
+              <div>{{ $t('Link-action') }}: </div>
             </template>
             <v-radio
               v-for="l in linkActions"
@@ -31,7 +31,7 @@
           <v-text-field
             v-model="remoteAccountKey"
             class="ma-0 pa-0"
-            label="Remote Account Public Key"
+            :label="$t('Remote-Account-Public-Key')"
             required
           />
         </v-flex>
@@ -42,7 +42,7 @@
           <v-text-field
             v-model="maxFee"
             class="ma-0 pa-0"
-            label="Max Fee"
+            :label="$t('Max-Fee')"
             number
             required
           />
@@ -52,10 +52,10 @@
       <v-layout row>
         <v-flex xs12>
           <v-text-field
-            disabled
             v-model="generationHash"
+            disabled
             class="ma-0 pa-0"
-            label="Generation Hash"
+            :label="$t('Generation-Hash')"
             string
             required
           />
@@ -63,15 +63,15 @@
       </v-layout>
 
 
-        <v-btn
-          style="margin-bottom: 20px"
-          color="primary mx-0"
-          :disabled="disabledSendTransaction"
-          depressed
-          @click="showDialog"
-        >
-          Send
-        </v-btn>
+      <v-btn
+        style="margin-bottom: 20px"
+        color="primary mx-0"
+        :disabled="disabledSendTransaction"
+        depressed
+        @click="showDialog"
+      >
+        Send
+      </v-btn>
 
       <v-layout column>
         <SendConfirmation
@@ -102,12 +102,12 @@
         </v-list>
       </Confirmation>
       <v-dialog
-              v-model="isShowErrorMessage"
-              width="500"
+        v-model="isShowErrorMessage"
+        width="500"
       >
         <ErrorMessageComponent
-                :errorMessage = 'errorMessage'
-                @hideErrorMessage = 'hideErrorMessage'
+          :error-message="errorMessage"
+          @hideErrorMessage="hideErrorMessage"
         />
       </v-dialog>
     </v-container>
@@ -165,7 +165,7 @@ export default {
       isShowErrorMessage: false,
       errorMessage: {},
       maxFee: 0,
-      remoteAccountKey: 'F95DE849EA383A05F128DA22FD3801D83B1327A86959BB9EC53DBBEDE3AEE488',
+      remoteAccountKey: '',
       linkAction: LinkAction.Link,
       linkActions: [
         {
@@ -218,17 +218,17 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Link Action',
-          value: this.linkAction === 1 ? 'Unlink' : 'Link',
+          key: this.$t('Link-Action'),
+          value: this.$t(this.linkAction === 1 ? 'Unlink' : 'Link'),
         },
         {
           icon: 'add',
-          key: 'Account Public Key',
+          key: this.$t('Account-Public-Key'),
           value: this.remoteAccountKey,
         },
         {
           icon: 'add',
-          key: 'Max Fee',
+          key: this.$t('Max-Fee'),
           value: this.maxFee,
         },
       ];
@@ -243,5 +243,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>

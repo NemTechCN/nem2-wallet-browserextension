@@ -19,7 +19,7 @@
   <v-card>
     <v-card-title>
       <span class="title">
-        Get address from public key
+        {{ $t('"Get-address-from-public-key"') }}
       </span>
     </v-card-title>
     <v-card-text>
@@ -42,15 +42,15 @@
           </v-radio-group>
           <v-text-field
             v-model="addressPlain"
-            label="Address plain"
+            :label="$t('Address-plain')"
           />
           <v-text-field
             v-model="addressPretty"
-            label="Address pretty"
+            :label="$t('Address-pretty')"
           />
           <v-text-field
             v-model="addressEncoded"
-            label="Address encoded"
+            :label="$t('Address-encoded')"
           />
         </v-form>
       </v-flex>

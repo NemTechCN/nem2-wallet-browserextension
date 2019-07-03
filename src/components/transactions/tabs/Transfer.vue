@@ -17,14 +17,17 @@
 
 <template>
   <div>
-    <Transfer :transactionType="transactionType" class="mb-4" />
+    <Transfer
+      :transaction-type="transactionType"
+      class="mb-4"
+    />
 
     <v-card class="mb-4">
       <v-toolbar
         card
         prominent
       >
-        <v-toolbar-title>Holdings</v-toolbar-title>
+        <v-toolbar-title>{{ $t('Holdings') }}</v-toolbar-title>
       </v-toolbar>
       <v-card-text>
         <AssetList />
@@ -36,7 +39,7 @@
         && transactions.transactions
         && transactions.transactions[wallet.activeWallet.name]"
       preset-filter="Transfer"
-      title="Recent transfers"
+      :title="$t('Recent-transfers')"
       class="mb-4"
     />
   </div>
@@ -55,12 +58,12 @@ export default {
     Transactions,
     Transfer,
   },
-  computed: mapState(['transactions', 'wallet']),
   data() {
     return {
       transactionType: TransactionType.TRANSFER,
     };
   },
+  computed: mapState(['transactions', 'wallet']),
 };
 
 </script>

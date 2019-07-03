@@ -23,7 +23,7 @@
         && transactions.transactions
         && transactions.transactions[wallet.activeWallet.name]"
       preset-filter="false"
-      title="Recent filter transactions"
+      :title="$t('Recent-filter-transactions')"
       class="mb-4"
     />
   </div>

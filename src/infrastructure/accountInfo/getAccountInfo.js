@@ -19,6 +19,7 @@
 
 import { AccountHttp } from 'nem2-sdk';
 import { formatAccountInfo } from './formatAccountInfo';
+import errorMessages from '../errorMessage/error-message';
 
 const getAccountInfo = (wallet, activeNode) => new Promise((resolve, reject) => {
   const accountHttp = new AccountHttp(activeNode);
@@ -30,9 +31,11 @@ const getAccountInfo = (wallet, activeNode) => new Promise((resolve, reject) => 
     },
     (err) => {
       if (err.response && JSON.parse(err.response.text).code === 'ResourceNotFound') {
-        reject(new Error('This address is not known by the network.'));
+        reject(new Error(errorMessages.ADDRESS_NOT_KNOWN));
       } else {
-        reject(new Error('Error when trying to get the account information. Please make sure this address is known by the network. If it should, please try with another node, or verify your internet connection.', JSON.stringify(err)));
+        // eslint-disable-next-line no-console
+        console.error(err);
+        reject(new Error(errorMessages.CONNECTION_ERROR));
       }
     },
   );

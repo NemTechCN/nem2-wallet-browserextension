@@ -44,7 +44,9 @@
               card
               prominent
             >
-              <v-toolbar-title>Multisig actions</v-toolbar-title>
+              <v-toolbar-title>
+                {{ $t('Multisig-actions') }}
+              </v-toolbar-title>
             </v-toolbar>
 
             <v-tabs
@@ -54,13 +56,13 @@
               class="mb-4"
             >
               <v-tab>
-                Convert To Multisig
+                {{ $t('Convert-To-Multisig') }}
               </v-tab>
               <v-tab>
-                Modify Multisig
+                {{ $t('Modify-Multisigs') }}
               </v-tab>
               <v-tab>
-                Cosign Multisig Transactions
+                {{ $t('Cosign-Multisig-Transactions') }}
               </v-tab>
               <v-tab-item
                 v-if="!(wallet.wallets.length > 0

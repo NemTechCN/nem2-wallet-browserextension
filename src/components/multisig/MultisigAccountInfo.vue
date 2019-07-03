@@ -1,5 +1,5 @@
 <template>
-<!--
+  <!--
                    v-if="multisig.multisigInfo && multisig.multisigInfo[wallet.activeWallet.name]"
                   :multisig-account-info="multisig.multisigInfo[wallet.activeWallet.name]"
                   -->
@@ -14,7 +14,9 @@
             card
             prominent
           >
-            <v-toolbar-title>{{ wallet.activeWallet.name }}: Multisig Information</v-toolbar-title>
+            <v-toolbar-title>
+              {{ wallet.activeWallet.name }}: {{ $t('Multisig-Information') }}
+            </v-toolbar-title>
             <v-spacer />
 
             <v-btn
@@ -39,24 +41,24 @@
           </v-layout>
           <v-card-title
             v-if="!multisig.loading_getMultisigInfo
-            && !multisig.multisigInfo[wallet.activeWallet.name]"
+              && !multisig.multisigInfo[wallet.activeWallet.name]"
             primary-title
           >
             <div class="monospaced">
               <div class="clearfix homeLine">
-                This account is not a multisig nor a cosignatory one
+                {{ $t('This-account-is-not-a-multisig-nor-a-cosignatory-one') }}
               </div>
             </div>
           </v-card-title>
           <v-card-title
             v-if="!multisig.loading_getMultisigInfo
-            && multisig.multisigInfo[wallet.activeWallet.name]"
+              && multisig.multisigInfo[wallet.activeWallet.name]"
             primary-title
           >
             <div class="monospaced">
               <div class="clearfix homeLine">
                 <div class="clearfix">
-                  account public key:
+                  {{ $t('account-public-key') }}:
                 </div>
                 <div class="clearfix">
                   {{ typeof multisig.multisigInfo[wallet.activeWallet.name].account == 'undefined'
@@ -66,7 +68,7 @@
 
               <div class="clearfix homeLine">
                 <div class="clearfix">
-                  min approval:
+                  {{ $t('min-approval') }}:
                 </div>
                 <div class="clearfix">
                   {{ multisig.multisigInfo[wallet.activeWallet.name].minApproval }}
@@ -75,7 +77,7 @@
 
               <div class="clearfix homeLine">
                 <div class="clearfix">
-                  min removal:
+                  {{ $t('min-removal') }}:
                 </div>
                 <div class="clearfix">
                   {{ multisig.multisigInfo[wallet.activeWallet.name].minRemoval }}
@@ -84,11 +86,11 @@
 
               <div
                 v-if="!multisig.loading_getMultisigInfo
-                 && !multisig.multisigInfo[wallet.activeWallet.name]"
-               class="clearfix homeLine"
+                  && !multisig.multisigInfo[wallet.activeWallet.name]"
+                class="clearfix homeLine"
               >
                 <div class="clearfix">
-                  cosignatory list:
+                  {{ $t('cosignatory-list') }}:
                 </div>
                 <div
                   v-for="(m, j) in multisig.multisigInfo[wallet.activeWallet.name].cosignatories"
@@ -99,17 +101,21 @@
                 </div>
               </div>
               <div
-               v-if="!multisig.loading_getMultisigInfo
-                && multisig.multisigInfo[wallet.activeWallet.name]"
-              class="clearfix homeLine">
+                v-if="!multisig.loading_getMultisigInfo
+                  && multisig.multisigInfo[wallet.activeWallet.name]"
+                class="clearfix homeLine"
+              >
                 <div class="clearfix">
                   multisig list(
-                  {{multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts.length}}
+                  {{ multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts.length }}
                   )
                 </div>
-                <div v-if="
-                      multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts.length == 0">
-                  this account does not own any multisig account
+                <div
+                  v-if="
+                    multisig.multisigInfo[wallet.activeWallet.name]
+                      .multisigAccounts.length == 0"
+                >
+                  {{ $t('this-account-does-not-own-any-multisig-account') }}
                 </div>
                 <div
                   v-for="(m, i) in multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
@@ -123,24 +129,25 @@
               <div>
                 <div>
                   cosigner list(
-                  {{multisig.multisigInfo[wallet.activeWallet.name].cosignatories.length}}
+                  {{ multisig.multisigInfo[wallet.activeWallet.name].cosignatories.length }}
                   )
                 </div>
-                <div v-if="
-                       multisig.multisigInfo[wallet.activeWallet.name].cosignatories.length == 0">
-                  this account does not own any cosigner
+                <div
+                  v-if="
+                    multisig.multisigInfo[wallet.activeWallet.name].cosignatories.length == 0"
+                >
+                  {{ $t('this-account-does-not-own-any-cosigner') }}
                 </div>
                 <div
-                        v-for="
-                        (c, i) in multisig.multisigInfo[wallet.activeWallet.name].cosignatories"
-                        v-else
-                        :key="i"
-                        class="clearfix"
+                  v-for="
+                    (c, i) in multisig.multisigInfo[wallet.activeWallet.name].cosignatories"
+                  v-else
+                  :key="i"
+                  class="clearfix"
                 >
                   {{ c.publicKey }}
                 </div>
               </div>
-
             </div>
           </v-card-title>
         </v-card>
@@ -163,7 +170,6 @@ export default {
   ]),
   methods: {
     reloadMultisigInfo(wallet) {
-      console.log(this.multisig.multisigInfo[this.wallet.activeWallet.name])
       this.$store.dispatch('multisig/REFRESH_MULTISIG_INFO', {
         wallet,
         mode: GET_MULTISIG_MODES.RELOAD,

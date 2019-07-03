@@ -23,10 +23,10 @@
     <v-card>
       <v-card-title primary-title>
         <h3 class="headline mb-3">
-          Lookup another address
+          {{ $t('Lookup-another-address') }}
         </h3>
         <p class="mb-0">
-          Need to check this address again in the future? Store this address as a watch-only wallet!
+          {{ $t('Need-to-check-this-address-again') }}
         </p>
       </v-card-title>
       <v-card-text>
@@ -55,12 +55,12 @@
         <v-text-field
           v-model="name"
           class="ma-0 pa-0"
-          label="name (leave blank to use the address as a name)"
+          :label="$t('name-leave-blank-use-address')"
           type="text"
         />
         <v-switch
           v-model="isToBeSaved"
-          label="store as watch-only wallet"
+          :label="$t('store-as-watch-only-wallet')"
         />
       </v-card-text>
       <v-card-actions>

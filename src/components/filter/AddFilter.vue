@@ -20,7 +20,7 @@
     <v-layout column>
       <v-layout row>
         <v-flex xs3>
-          <v-subheader>Filter Type</v-subheader>
+          <v-subheader>{{ $t('Filter-Type') }}</v-subheader>
         </v-flex>
         <v-flex xs9>
           <v-radio-group
@@ -62,13 +62,13 @@
     <v-layout column>
       <v-layout row>
         <v-flex xs3>
-          <v-subheader>Max Fee</v-subheader>
+          <v-subheader>{{ $t('Max-Fee') }}</v-subheader>
         </v-flex>
         <v-flex xs7>
           <v-text-field
             v-model="maxFee"
             class="ma-0 pa-0"
-            label="Max Fee"
+            :label="$t('Max-Fee')"
             solo
             required
           />
@@ -79,14 +79,14 @@
     <v-layout column>
       <v-layout row>
         <v-flex xs3>
-          <v-subheader>Generation Hash</v-subheader>
+          <v-subheader>{{ $t('Generation-Hash') }}</v-subheader>
         </v-flex>
         <v-flex xs7>
           <v-text-field
-            disabled
             v-model="generationHash"
+            disabled
             class="ma-0 pa-0"
-            label="Generation Hash"
+            :label="$t('Generation-Hash')"
             solo
             required
           />
@@ -99,7 +99,7 @@
       :action-type="actionType"
       :filter-type="filterType"
       :max-fee="maxFee"
-      :generationHash="generationHash"
+      :generation-hash="generationHash"
       @closeFilter="$emit('closeFilter')"
     />
     <FilterTransaction
@@ -107,7 +107,7 @@
       :action-type="actionType"
       :filter-type="filterType"
       :max-fee="maxFee"
-      :generationHash="generationHash"
+      :generation-hash="generationHash"
       @closeFilter="$emit('closeFilter')"
     />
     <FilterTransaction
@@ -115,7 +115,7 @@
       :action-type="actionType"
       :filter-type="filterType"
       :max-fee="maxFee"
-      :generationHash="generationHash"
+      :generation-hash="generationHash"
       @closeFilter="$emit('closeFilter')"
     />
   </v-layout>
@@ -137,14 +137,14 @@ export default {
     return {
       PropertyType,
       filterTypes: [
-        { label: 'Address', type: PropertyType.AllowAddress },
-        { label: 'Mosaic', type: PropertyType.AllowMosaic },
-        { label: 'Transaction', type: PropertyType.AllowTransaction },
+        { label: this.$t('Address'), type: PropertyType.AllowAddress },
+        { label: this.$t('Mosaic'), type: PropertyType.AllowMosaic },
+        { label: this.$t('Transaction'), type: PropertyType.AllowTransaction },
       ],
       filterType: PropertyType.AllowAddress,
       actionTypes: [
-        { label: 'allow', type: 0 },
-        { label: 'block', type: 0x80 },
+        { label: this.$t('allow'), type: 0 },
+        { label: this.$t('block'), type: 0x80 },
       ],
       actionType: 0,
       maxFee: 0,
@@ -202,17 +202,18 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'NamespaceType',
+          key: this.$t('Namespace-Type'),
           value: this.namespaceType === 0 ? 'RootNamespace' : 'SubNamespace',
         },
         {
           icon: 'add',
-          key: 'Namespace name',
-          value: this.namespaceType === 0 ? this.namespaceName : (`${this.parentNamespaceName}.${this.namespaceName}`),
+          key: this.$t('Namespace-name'),
+          value: this.namespaceType === 0
+            ? this.namespaceName : (`${this.parentNamespaceName}.${this.namespaceName}`),
         },
         {
           icon: 'add',
-          key: 'Duration',
+          key: this.$t('Duration'),
           value: this.duration,
         },
       ];
@@ -228,5 +229,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>

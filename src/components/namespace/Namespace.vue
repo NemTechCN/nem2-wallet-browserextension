@@ -34,7 +34,7 @@
           card
           prominent
         >
-          <v-toolbar-title>Namespaces</v-toolbar-title>
+          <v-toolbar-title>{{ $t('Namespaces') }}</v-toolbar-title>
           <v-spacer />
 
           <v-btn
@@ -103,7 +103,7 @@
           && transactions.transactions
           && transactions.transactions[wallet.activeWallet.name]"
         preset-filter="Namespace"
-        title="Recent namespace transactions"
+        :title="$t('Recent-namespace-transactions')"
         class="mb-4"
       />
     </v-flex>
@@ -166,5 +166,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-</style>

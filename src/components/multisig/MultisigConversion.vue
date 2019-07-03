@@ -16,80 +16,92 @@
 
 <template>
   <v-layout
-          column
-          class="mt-2 mb-3" >
+    column
+    class="mt-2 mb-3"
+  >
     <v-container>
       <v-layout
-              row
-              wrap >
+        row
+        wrap
+      >
         <v-flex
-                v-if="multisig.loading_getMultisigInfo"
-                xs12 >
+          v-if="multisig.loading_getMultisigInfo"
+          xs12
+        >
           <v-progress-linear
-                  :indeterminate="true" />
+            :indeterminate="true"
+          />
         </v-flex>
       </v-layout>
       <v-layout row>
         <v-flex xs12>
           <v-text-field
-                  v-model="minApprovalDelta"
-                  error-count="1"
-                  label="Min approval"
-                  type="number"
-                  required
-                  number />
+            v-model="minApprovalDelta"
+            error-count="1"
+            :label="$t('min-approval')"
+            type="number"
+            required
+            number
+          />
         </v-flex>
       </v-layout>
 
       <v-layout>
         <v-flex xs12>
           <v-text-field
-                  v-model="minRemovalDelta"
-                  class="ma-0 pa-0"
-                  label="Min removal"
-                  type="number"
-                  required
-                  number />
+            v-model="minRemovalDelta"
+            class="ma-0 pa-0"
+            :label="$t('min-removal')"
+            type="number"
+            required
+            number
+          />
         </v-flex>
       </v-layout>
       <v-layout row>
         <v-flex xs12>
           <v-text-field
-                  v-model="maxFee"
-                  label="Max Fee" />
+            v-model="maxFee"
+            :v-else="$t('Max-Fee')"
+          />
         </v-flex>
       </v-layout>
       <v-layout>
         <v-flex xs2>
-          <v-subheader>generation hash</v-subheader>
+          <v-subheader>
+            {{ $t('Generation-Hash') }}
+          </v-subheader>
         </v-flex>
         <v-flex xs9>
           <v-text-field
-                  class="ma-0 pa-0"
-                  v-model="generationHash"
-                  label="generation hash in this point"
-                  disabled
-                  requiredv
-                  solo />
+            v-model="generationHash"
+            class="ma-0 pa-0"
+            :label="$t('Generation-Hash')"
+            disabled
+            required
+            solo
+          />
         </v-flex>
       </v-layout>
       <v-layout>
-        <v-flex  sm >
+        <v-flex sm>
           <v-layout row>
             <v-flex xs2>
               <v-subheader>cosigner's publickey</v-subheader>
             </v-flex>
             <v-flex xs8>
               <v-text-field
-                      v-model="currentPublicKey"
-                      label="New consignatory's public key"
-                      solo />
+                v-model="currentPublicKey"
+                :label="$t('New-cosignatory-s-public-key')"
+                solo
+              />
             </v-flex>
             <v-flex xs2>
               <v-btn
-                      :disabled="currentPublicKey == ''"
-                      color="primary"
-                      @click="addPublicKey" >
+                :disabled="currentPublicKey === ''"
+                color="primary"
+                @click="addPublicKey"
+              >
                 <v-icon>add</v-icon>
               </v-btn>
             </v-flex>
@@ -97,23 +109,23 @@
 
           <template v-for="(publicKey, index) in publicKeyList">
             <v-list
-                    :key="index"
-                    two-line
+              :key="index"
+              two-line
             >
               <v-list-tile>
                 <v-list-tile-action>
                   <v-icon>style</v-icon>
                 </v-list-tile-action>
                 <v-list-tile-content>
-                  Cosignatory Publickey:{{ index + 1 }}
+                  {{ $t('Cosignatory-s-public-key') }}:{{ index + 1 }}
                   <br>
                   {{ publicKey }}
                 </v-list-tile-content>
                 <v-btn
-                        fab
-                        small
-                        color="error"
-                        @click="removeCosignatory(index)"
+                  fab
+                  small
+                  color="error"
+                  @click="removeCosignatory(index)"
                 >
                   <v-icon>remove</v-icon>
                 </v-btn>
@@ -124,33 +136,33 @@
       </v-layout>
       <v-layout>
         <v-layout
-                v-if="wallet.activeWallet.name"
-                row
-                justify-space-around
-                align-center
+          v-if="wallet.activeWallet.name"
+          row
+          justify-space-around
+          align-center
         >
           <v-btn
-                  :disabled="!(typeof multisig
+            :disabled="!(typeof multisig
               .multisigInfo[wallet.activeWallet.name].account === 'undefined'
               || !multisig.multisigInfo[wallet.activeWallet.name].isMultisig())"
-                  @click="showDialog"
+            @click="showDialog"
           >
-            Send
+            {{ $t('Send') }}
           </v-btn>
         </v-layout>
 
         <Confirmation
-                v-model="isDialogShow"
-                :transactions="transactions"
-                :generationHash="generationHash"
-                :transactionType = 'TransactionType.AGGREGATE_BONDED'
-                @sent="txSent"
-                @error="txError"
+          v-model="isDialogShow"
+          :transactions="transactions"
+          :generation-hash="generationHash"
+          :transaction-type="TransactionType.AGGREGATE_BONDED"
+          @sent="txSent"
+          @error="txError"
         >
           <v-list>
             <v-list-tile
-                    v-for="detail in dialogDetails"
-                    :key="detail.key"
+              v-for="detail in dialogDetails"
+              :key="detail.key"
             >
               <v-list-tile-action>
                 <v-icon>{{ detail.icon }}</v-icon>
@@ -163,11 +175,11 @@
             </v-list-tile>
 
             <v-list-tile
-                    v-for="(publicKey,index) in publicKeyList"
-                    :key="index"
+              v-for="(publicKey,index) in publicKeyList"
+              :key="index"
             >
               <v-list-tile-action>
-                <v-icon/>
+                <v-icon />
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
@@ -180,17 +192,17 @@
       </v-layout>
       <v-layout column>
         <SendConfirmation
-                :tx-send-data="txSendResults"
+          :tx-send-data="txSendResults"
         />
       </v-layout>
     </v-container>
     <v-dialog
-            v-model="isShowErrorMessage"
-            width="500"
+      v-model="isShowErrorMessage"
+      width="500"
     >
       <ErrorMessageComponent
-              :errorMessage = 'errorMessage'
-              @hideErrorMessage = 'hideErrorMessage'
+        :error-message="errorMessage"
+        @hideErrorMessage="hideErrorMessage"
       />
     </v-dialog>
   </v-layout>
@@ -221,8 +233,7 @@ const multisigCoversionValidator = (pointer) => {
   const {
     minApprovalDelta, minRemovalDelta, txMaxFee, generationHash, publicKeyList,
   } = pointer;
-  /* eslint-disable */
-  let errorMessage = {
+  const errorMessage = {
     message: [],
     disabled: true,
   };
@@ -257,7 +268,7 @@ const multisigCoversionValidator = (pointer) => {
     }
     return true;
   });
-  errorMessage.disabled = publickeyFlag ? false : true;
+  errorMessage.disabled = !publickeyFlag;
   return errorMessage;
 };
 
@@ -272,7 +283,7 @@ export default {
   data() {
     return {
       TransactionType,
-      currentPublicKey: '8286C52C585471A6BEAAFE07C68EA004CF2DF5EE171A88596B26054FEAF4C8BC',
+      currentPublicKey: '',
       publicKeyList: [],
       isDialogShow: false,
       txSendResults: [],
@@ -356,22 +367,22 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Min Approval',
+          key: this.$t('min-approval'),
           value: this.minApprovalDelta,
         },
         {
           icon: 'add',
-          key: 'Min Removal',
+          key: this.$t('min-removal'),
           value: this.minRemovalDelta,
         },
         {
           icon: 'add',
-          key: 'Max Fee',
+          key: this.$t('Max-Fee'),
           value: this.maxFee,
         },
         {
-          icon: 'add',
-          key: 'Cosignatory List',
+          icon: this.$t('add'),
+          key: 'cosignatory-list',
           value: '',
         },
       ];

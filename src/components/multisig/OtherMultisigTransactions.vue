@@ -3,25 +3,24 @@
     <v-layout wrap>
       <v-flex xs12>
         <v-combobox
-                v-model="transactionType"
-                :items="transactionTypeLists"
-                label="choose multisig transaction type"
-        ></v-combobox>
+          v-model="transactionType"
+          :items="transactionTypeLists"
+          :label="$t('Multisig-transaction-type')"
+        />
       </v-flex>
     </v-layout>
 
     <v-layout row>
       <v-flex xs12>
         <v-select
-                v-model="currentMultisigPublicKey"
-                label="Multisig Account Publickey"
-                :items="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
-                item-text="publicKey"
+          v-model="currentMultisigPublicKey"
+          :label="$t('Multisig-Account-Public-Key')"
+          :items="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
+          item-text="publicKey"
         />
       </v-flex>
     </v-layout>
-    <Transfer :currentMultisigPublicKey="currentMultisigPublicKey"></Transfer>
-
+    <Transfer :current-multisig-public-key="currentMultisigPublicKey" />
   </v-container>
 </template>
 
@@ -41,29 +40,16 @@ export default {
       currentMultisigPublicKey: '',
     };
   },
-  watch: {
-    transactionType() {
-      console.log('change tx panel');
-    },
-  },
   computed: {
     ...mapState([
       'wallet',
       'accountInfo',
       'application',
       'transactions',
-      'assets',
-      'namespaces',
       'multisig',
     ], {
       wallet: state => state.wallet,
-      assets: state => state.assets,
-      namespaces: state => state.namespaces,
     }),
   },
 };
 </script>
-
-<style scoped>
-
-</style>

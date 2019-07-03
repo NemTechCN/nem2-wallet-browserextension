@@ -62,7 +62,7 @@
           color="primary mx-0"
           @click="showDialog"
         >
-          {{ !!currentAlias ? 'Unlink' : 'Link' }}
+          {{ !!currentAlias ? $t('Unlink') : $t('Link') }}
         </v-btn>
       </v-card-actions>
       <SendConfirmation
@@ -215,17 +215,17 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'AliasActionType',
-          value: this.aliasActionType === 0 ? 'Link' : 'Unlink',
+          key: this.$t('Alias-action-type'),
+          value: this.aliasActionType === 0 ? this.$t('Link') : this.$t('Unlink'),
         },
         {
           icon: 'add',
-          key: 'NamespaceName',
+          key: this.$t('Namespace-name'),
           value: this.namespaceName,
         },
         {
           icon: 'add',
-          key: 'Alias',
+          key: this.$t('Alias'),
           value: this.currentAlias ? this.currentAlias : this.aliasInput,
         },
       ];

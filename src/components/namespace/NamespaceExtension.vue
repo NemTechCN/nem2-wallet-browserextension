@@ -24,7 +24,7 @@
       <v-toolbar card>
         <v-card-title primary-title>
           <h3 class="headline mb-3">
-            Extend namespace {{ namespaceName }}
+            {{ $t('Extend-namespace') }} {{ namespaceName }}
           </h3>
         </v-card-title>
         <v-spacer />
@@ -39,12 +39,12 @@
 
       <v-card-text>
         <h3 class="headline mb-5">
-          {{ expiration(endHeight) }}
+          {{ expirationText(endHeight) }}
         </h3>
         <v-text-field
           v-model="duration"
           class="my-2 pa-0"
-          label="Duration increase, in blocks"
+          :label="$t('Duration-increase')"
           required
           number
         />
@@ -60,14 +60,14 @@
           flat
           @click="$emit('close')"
         >
-          Close
+          {{ $t('Close') }}
         </v-btn>
         <v-btn
           :disabled="!(duration > 0)"
           color="primary mx-0"
           @click="showDialog"
         >
-          Send Transaction
+          {{ $t('Send-Transaction') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -151,12 +151,13 @@ export default {
   methods: {
     showDialog() {
       const { duration, namespaceName } = this;
-      const registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(
-        Deadline.create(),
-        namespaceName,
-        UInt64.fromUint(duration),
-        NetworkType.MIJIN_TEST,
-      );
+      const registerNamespaceTransaction = RegisterNamespaceTransaction
+        .createRootNamespace(
+          Deadline.create(),
+          namespaceName,
+          UInt64.fromUint(duration),
+          NetworkType.MIJIN_TEST,
+        );
 
       this.transactions = [registerNamespaceTransaction];
       this.dialogDetails = [
@@ -175,12 +176,16 @@ export default {
       // eslint-disable-next-line no-console
       console.error(error);
     },
-    expiration(endHeight) {
+    expirationText(endHeight) {
       const { blockNumber } = this.application;
-      if (!(blockNumber > 0)) return `This namespace expires at height ${endHeight.toLocaleString()}`;
+      if (blockNumber <= 0 || typeof blockNumber !== 'number') {
+        return `${this.$t('This-namespace-expires-at-height')} ${endHeight.toLocaleString()})`;
+      }
       const expiresIn = endHeight - blockNumber;
-      if (expiresIn > 0) return `This namespace expires in ${expiresIn.toLocaleString()} blocks.`;
-      return `This namespace has been expired for ${(expiresIn * -1).toLocaleString()} blocks.`;
+      if (expiresIn > 0) {
+        return this.$t('This-namespace-expires-in-blocks.', { block: expiresIn.toLocaleString() });
+      }
+      return this.$t('This-namespace-has-been-expired-for-blocks.', { block: (expiresIn * -1).toLocaleString() });
     },
   },
 };

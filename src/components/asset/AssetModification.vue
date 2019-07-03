@@ -24,9 +24,9 @@
       <v-toolbar card>
         <v-card-title primary-title>
           <h3 class="headline mb-3">
-            Mofify the supply of asset {{ activeAsset.name
-              ? `${activeAsset.name} (${activeAsset.id})`
-              : activeAsset.id }}
+            {{ $t('Modify-the-supply-of-asset',
+                  {assetName: activeAsset.name
+                    ? `${activeAsset.name} (${activeAsset.id}` : activeAsset.id}) }}
           </h3>
         </v-card-title>
       </v-toolbar>
@@ -34,14 +34,14 @@
         <v-select
           v-model="direction"
           :items="directions"
-          label="Direction"
+          :label="$t('Direction')"
           required
         />
 
         <v-text-field
           v-model="supply"
           class="ma-0 pa-0"
-          label="Supply (unit)"
+          :label="$t('Supply')"
           type="number"
           required
           number
@@ -50,7 +50,7 @@
         <v-text-field
           v-model="generationHash"
           class="ma-0 pa-0"
-          label="Generation Hash"
+          :label="$t('Generation-Hash')"
           required
         />
         <SendConfirmation
@@ -62,14 +62,14 @@
             flat
             @click="$emit('close')"
           >
-            close
+            {{ $t('close') }}
           </v-btn>
           <v-btn
             :disabled="disabledSendTransaction"
             color="primary mx-0"
             @click="modifyAsset"
           >
-            Send Transaction
+            {{ $t('Send-Transaction') }}
           </v-btn>
         </v-card-actions>
       </v-card-text>
@@ -177,12 +177,12 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Direction',
+          key: this.$t('Direction'),
           value: this.direction,
         },
         {
           icon: 'add',
-          key: 'Supply',
+          key: this.$t('Supply'),
           value: this.supply,
         },
       ];

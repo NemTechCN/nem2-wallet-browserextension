@@ -51,17 +51,17 @@
           </v-radio-group>
           <v-text-field
             v-model="addressPlain"
-            label="Address plain"
+            :label="$t('Address-plain')"
             @change="calculateAddress"
           />
           <v-text-field
             v-model="addressPretty"
-            label="Address pretty"
+            :label="$t('Address-pretty')"
             @change="calculateAddress"
           />
           <v-text-field
             v-model="addressEncoded"
-            label="Address encoded"
+            :label="$t('Address-encoded')"
             @change="decodeAddress"
           />
         </v-form>
@@ -72,7 +72,7 @@
         color="primary"
         @click="generateAccount"
       >
-        Generate private key
+        {{ $t('Generate-private-key') }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -122,7 +122,7 @@ export default {
     checkPrivatePublicKeyMatch() {
       if (!this.isPrivatePublicKeyMatch()) {
         this.privateKeyErr = true;
-        this.privateKeyErrMessage = 'Private Key does not match public key';
+        this.privateKeyErrMessage = this.$t('Private-Key-does-not-match-public-key');
         return;
       }
       this.privateKeyErr = false;

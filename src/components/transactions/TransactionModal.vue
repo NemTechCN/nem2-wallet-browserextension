@@ -39,21 +39,21 @@
               </span>
 
               <span class="clearfix bold">
-                blockNumber
+                {{ $t('Block-Number') }}
               </span>
               <span class="clearfix  mb-2">
                 {{ tx.blockNumber.toLocaleString() }}
               </span>
 
               <span class="clearfix bold">
-                transactionHash
+                {{ $t('Transaction-hash') }}
               </span>
               <span class="clearfix  mb-2">
                 {{ tx.transactionHash }}
               </span>
 
               <span class="clearfix bold">
-                signer
+                {{ $t('Signer') }}
               </span>
               <span class="clearfix  mb-2">
                 {{ tx.signer }}
@@ -61,7 +61,7 @@
 
               <div v-if="tx.recipient !== ''">
                 <span class="clearfix bold">
-                  recipient
+                  {{ $t('Recipient') }}
                 </span>
                 <span class="clearfix  mb-2">
                   {{ tx.recipient }}
@@ -70,7 +70,7 @@
 
               <div v-if="tx.amount > 0">
                 <span class="clearfix bold">
-                  amount
+                  {{ $t('Amount') }}
                 </span>
                 <span class="clearfix  mb-2">
                   {{ tx.amount.toLocaleString() }}
@@ -78,7 +78,7 @@
               </div>
 
               <span class="clearfix bold">
-                fee
+                {{ $t('Fee') }}
               </span>
               <span class="clearfix  mb-2">
                 {{ tx.fee }}
@@ -103,7 +103,7 @@
               color="info"
               @click.stop="show=false"
             >
-              Close
+              {{ $t('Close') }}
             </v-btn>
           </v-card-actions>
         </v-card>

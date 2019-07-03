@@ -47,7 +47,8 @@
           <v-flex xs7>
             <v-text-field
               v-model="hexId"
-              :placeholder="filterType == PropertyType.AllowAddress ? 'input address hex':'input mosaic id'"
+              :placeholder="filterType == PropertyType.AllowAddress
+                ? $t('input-address-hex'): $t('input-mosaic-id')"
               solo
             />
           </v-flex>
@@ -70,15 +71,15 @@
           <v-flex>
             <v-btn
               dark
-              :color="isAdd?'primary':'red'"
-              @click="isAdd=!isAdd"
+              :color="isAdd ? 'primary' : 'red'"
+              @click="isAdd = !isAdd"
             >
-              {{ isAdd?'Add':'Remove' }}
+              {{ isAdd ? $t('Add') : $t('Remove') }}
               <v-icon
                 dark
                 right
               >
-                {{ isAdd?'add_circle_outline':'remove_circle_outline' }}
+                {{ isAdd ? 'add_circle_outline' : 'remove_circle_outline' }}
               </v-icon>
             </v-btn>
           </v-flex>
@@ -89,7 +90,7 @@
               :items="entityTypes"
               item-text="label"
               item-value="hexEntityType"
-              label="(Option) Select From"
+              :label="$t('Optional-Select-From')"
               solo
             />
           </v-flex>
@@ -124,11 +125,15 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-subheader>
-                  {{ filter.propertyModificationType == 0 ? 'add':'remove' }}
+                  {{ filter.propertyModificationType == 0
+                    ? $t('add') : $t('remove') }}
                 </v-subheader>
-                {{ filterType == PropertyType.AllowTransaction ? 'Entity Type:':'' }}
-                {{ filterType == PropertyType.AllowMosaic ? 'Mosaic Id:':'' }}
-                {{ filterType == PropertyType.AllowAddress ? 'Address Hex:':'' }}
+                {{ filterType == PropertyType.AllowTransaction
+                  ? `${$t('Entity-Type')}:` : '' }}
+                {{ filterType == PropertyType.AllowMosaic
+                  ? `${$t('Mosaic-Id')}:` : '' }}
+                {{ filterType == PropertyType.AllowAddress
+                  ? `${$t('Address-Hex')}:` : '' }}
                 {{ filter.hexId }}
               </v-list-tile-content>
               <v-btn
@@ -156,7 +161,7 @@
           :disabled="disabledSendTransaction"
           @click="showDialog"
         >
-          Send
+          {{ $t('Send') }}
         </v-btn>
       </v-card-actions>
 
@@ -212,8 +217,8 @@
       width="500"
     >
       <ErrorMessageComponent
-              :errorMessage = 'errorMessage'
-              @hideErrorMessage = 'hideErrorMessage'
+        :error-message="errorMessage"
+        @hideErrorMessage="hideErrorMessage"
       />
     </v-dialog>
   </div>
@@ -338,22 +343,25 @@ export default {
       txSendResults: [],
       entityType: {},
       entityTypes: [
-        { label: 'Transfer', entityType: TransactionType.TRANSFER },
-        { label: 'Namespace', entityType: TransactionType.REGISTER_NAMESPACE },
-        { label: 'Mosaic Supply Change', entityType: TransactionType.MOSAIC_SUPPLY_CHANGE },
-        { label: 'Modify multisig', entityType: TransactionType.MODIFY_MULTISIG_ACCOUNT },
-        { label: 'Aggregate Complete', entityType: TransactionType.AGGREGATE_COMPLETE },
-        { label: 'Aggregate Bonded', entityType: TransactionType.AGGREGATE_BONDED },
-        { label: 'Lock Funds', entityType: TransactionType.LOCK },
-        { label: 'Secret Lock', entityType: TransactionType.SECRET_LOCK },
-        { label: 'Secret Proof', entityType: TransactionType.SECRET_PROOF },
-        { label: 'Address Alias', entityType: TransactionType.ADDRESS_ALIAS },
-        { label: 'Mosaic Alias', entityType: TransactionType.MOSAIC_ALIAS },
-        { label: 'Account Property Address', entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS },
-        { label: 'Account Property Mosaic', entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC },
-        { label: 'Account Property Entity Type', entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE },
-        // eslint-disable-next-line max-len
-      ].map(x => ({ label: x.label, entityType: x.entityType, hexEntityType: x.entityType.toString(16).toUpperCase() })),
+        { label: this.$t('Transfer'), entityType: TransactionType.TRANSFER },
+        { label: this.$t('Namespace'), entityType: TransactionType.REGISTER_NAMESPACE },
+        { label: this.$t('Mosaic-Supply-Change'), entityType: TransactionType.MOSAIC_SUPPLY_CHANGE },
+        { label: this.$t('Modify-multisig'), entityType: TransactionType.MODIFY_MULTISIG_ACCOUNT },
+        { label: this.$t('Aggregate-Complete'), entityType: TransactionType.AGGREGATE_COMPLETE },
+        { label: this.$t('Aggregate-Bonded'), entityType: TransactionType.AGGREGATE_BONDED },
+        { label: this.$t('Lock-Funds'), entityType: TransactionType.LOCK },
+        { label: this.$t('Secret-Lock'), entityType: TransactionType.SECRET_LOCK },
+        { label: this.$t('Secret-Proof'), entityType: TransactionType.SECRET_PROOF },
+        { label: this.$t('Address-Alias'), entityType: TransactionType.ADDRESS_ALIAS },
+        { label: this.$t('Mosaic-Alias'), entityType: TransactionType.MOSAIC_ALIAS },
+        { label: this.$t('Account-Property-Address'), entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS },
+        { label: this.$t('Account-Property-Mosaic'), entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC },
+        { label: this.$t('Account-Property-Entity-Type'), entityType: TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE },
+      ].map(x => ({
+        label: x.label,
+        entityType: x.entityType,
+        hexEntityType: x.entityType.toString(16).toUpperCase(),
+      })),
       additionalModification: {
         isAdd: true,
         hexEntityType: '4152',
@@ -405,22 +413,22 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'FilterType',
+          key: this.$t('Filter-Type'),
           value: 'Address',
         },
         {
           icon: 'add',
-          key: 'ActionType',
-          value: this.actionType === 0 ? 'allow' : 'block',
+          key: this.$t('Action-type'),
+          value: this.actionType === 0 ? this.$t('allow') : this.$t('block'),
         },
         {
           icon: 'add',
-          key: 'MaxFee',
+          key: this.$t('Max-Fee'),
           value: this.maxFee,
         },
         {
           icon: 'add',
-          key: 'List',
+          key: this.$t('List'),
           value: '',
         },
       ];

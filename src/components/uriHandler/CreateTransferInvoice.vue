@@ -41,7 +41,9 @@
             card
             prominent
           >
-            <v-toolbar-title>Create an URI invoice</v-toolbar-title>
+            <v-toolbar-title>
+              {{ $t('Create-an-URI-invoice') }}
+            </v-toolbar-title>
           </v-toolbar>
           <v-card-text>
             <v-flex xs12>
@@ -49,34 +51,34 @@
                 <v-text-field
                   v-model="txRecipient"
                   required
-                  label="Recipient"
+                  :label="$t('Recipient')"
                 />
 
                 <v-text-field
                   v-model="txAmount"
                   placeholder="ex. 10"
                   type="number"
-                  label="Amount (cat.currency)"
+                  :v-once="`${$t('Amount')} (cat.currency)`"
                   required
                 />
 
                 <v-text-field
                   v-model="endpoint"
-                  label="Endpoint"
+                  :label="$t('Endpoint')"
                   type="text"
                   required
                 />
 
                 <v-text-field
                   v-model="generationHash"
-                  label="Generation Hash"
+                  :label="$t('Generation-Hash')"
                   type="text"
                   required
                 />
 
                 <v-checkbox
                   v-model="checkbox"
-                  label="Sending other assets?"
+                  :label="('Sending-other-assets?')"
                 />
                 <v-flex
                   v-if="checkbox"
@@ -85,14 +87,14 @@
                 >
                   <v-text-field
                     v-model="currentMosaicName"
-                    label="Asset ID"
+                    :label="$('Asset-ID')"
                   />
 
                   <v-layout row>
                     <v-flex xs-11>
                       <v-text-field
                         v-model="currentMosaicAmount"
-                        label="Asset Amount"
+                        :label="('Asset-Amount')"
                       />
                     </v-flex>
 
@@ -118,7 +120,7 @@
                         <v-list-tile-content>
                           {{ mosaic.id.toHex() }}
                           <v-subheader>
-                            Amount: {{ mosaic.amount.compact() }}
+                            {{ $t('Amount') }}: {{ mosaic.amount.compact() }}
                           </v-subheader>
                         </v-list-tile-content>
                         <v-btn
@@ -137,7 +139,7 @@
 
                 <v-text-field
                   v-model="txMessage"
-                  label="Message"
+                  :label="$t('Message')"
                 />
               </v-form>
             </v-flex>
@@ -148,7 +150,7 @@
                 flat
                 @click="dialog = true"
               >
-                Create URI
+                {{ $t('Create-URI') }}
               </v-btn>
             </v-card-actions>
             <div class="mt-4" />
@@ -158,17 +160,20 @@
             >
               <v-card>
                 <v-card-title class="headline">
-                  Create this URI invoice?
+                  {{ $t('Create-this-URI-invoice?') }}
                 </v-card-title>
                 <v-card-text>
-                  Please double-check the URI details
+                  {{ $t('Please-double-check-the-URI-details') }}
                   <v-list>
                     <v-list-tile>
                       <v-list-tile-action>
                         <v-icon>person_outline</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>Recipient: {{ txRecipient }}</v-list-tile-title>
+                        <v-list-tile-title>
+                          {{ $t('Recipient') }}:
+                          {{ txRecipient }}
+                        </v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
 
@@ -177,7 +182,10 @@
                         <v-icon>monetization_on</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>Amount: {{ txAmount }} XEM</v-list-tile-title>
+                        <v-list-tile-title>
+                          {{ $t('Amount') }}:
+                          {{ txAmount }} XEM
+                        </v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
 
@@ -186,19 +194,20 @@
                         <v-icon>message</v-icon>
                       </v-list-tile-action>
                       <v-list-tile-content>
-                        <v-list-tile-title>Message: {{ txMessage }}</v-list-tile-title>
+                        <v-list-tile-title>{{ $t('Message') }}: {{ txMessage }}</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                   </v-list>
                   <template v-for="(mosaic) in mosaics">
                     <v-list :key="mosaic.id.toHex()">
-                      <v-list-tile v-if="!(mosaic.id.toHex() == '85bbea6cc462b244')">
+                      <v-list-tile v-if="!(mosaic.name == 'cat.currency')">
                         <v-list-tile-action>
                           <v-icon>group_work</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
                           <v-list-tile-title>
-                            Asset Attached: {{ mosaic.amount.compact() }} {{ mosaic.id.toHex() }}
+                            {{ $t('Asset-Attached') }}:
+                            {{ mosaic.amount.compact() }} {{ mosaic.id.toHex() }}
                           </v-list-tile-title>
                         </v-list-tile-content>
                       </v-list-tile>
@@ -213,14 +222,14 @@
                     flat
                     @click="dialog = false"
                   >
-                    Cancel
+                    {{ $t('Cancel') }}
                   </v-btn>
 
                   <v-btn
                     flat
                     @click="createTransactionURI"
                   >
-                    Save
+                    {{ $t('Save') }}
                   </v-btn>
                 </v-card-actions>
               </v-card>

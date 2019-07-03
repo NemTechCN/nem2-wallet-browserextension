@@ -50,7 +50,8 @@
                 {{ $t('Type') }}: {{ wallet.walletType }}
               </div>
               <div class="clearfix">
-                {{ $t('Locked') }}: {{ $t(wallet.isWatchOnly ? 'true' : 'false') }}
+                {{ $t('Locked') }}: {{ $t(wallet.isWatchOnly
+                  ? 'true' : 'false') }}
               </div>
             </div>
             <v-card-actions>

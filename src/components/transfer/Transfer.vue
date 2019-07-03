@@ -41,7 +41,9 @@
               card
               prominent
             >
-              <v-toolbar-title>Transfer Transaction</v-toolbar-title>
+              <v-toolbar-title>
+                {{ $t('Transfer-Transactions') }}
+              </v-toolbar-title>
 
               <v-spacer />
               <v-btn
@@ -56,39 +58,39 @@
 
             <v-card-text>
               <p class="mb-4 mt-4">
-                Current Node:
+                {{ $t('Current-node') }}:
                 <a
                   :href="application.activeNode"
                   target="_new"
                 >{{ application.activeNode }}</a>
-                (Dragon)
+                ({{ $t('Dragon') }})
               </p>
               <v-flex xs12>
                 <v-form lazy-validation>
                   <v-text-field
                     v-model="txRecipient"
-                    label="Recipient's address"
+                    :label="$t('Recipient-s-address')"
                     placeholder="ex. SB2JNF-UZ4MQP-BBDEQ2-C4QW2U-56PPVK-KMAMDU-77IE"
                     required
                   />
 
                   <v-text-field
                     v-model="txAmount"
-                    label="cat.currency amount"
+                    :label="`cat.currency ${$t('Amount')}`"
                     placeholder="ex. 10"
                     type="number"
                   />
 
                   <v-text-field
                     v-model="txMaxFee"
-                    label="Max fee"
+                    :label="$t('Max-Fee')"
                     placeholder="ex. 10"
                     type="number"
                   />
 
                   <v-checkbox
                     v-model="checkbox"
-                    label="Sending other assets?"
+                    :label="$t('Sending-other-assets?')"
                   />
                   <v-flex
                     v-if="checkbox"
@@ -99,21 +101,21 @@
                       v-if="wallet.activeWallet && assets.assets[wallet.activeWallet.name].length>0"
                       v-model="currentMosaicName"
                       :items="assets.assets[wallet.activeWallet.name].map(({id})=>id)"
-                      label="Chose an asset"
+                      :label="$t('Chose-an-asset')"
                     />
 
                     <v-text-field
                       v-if="!wallet.activeWallet
                         || assets.assets[wallet.activeWallet.name].length===0"
                       v-model="currentMosaicName"
-                      label="Enter a mosaic ID"
+                      :label="$t('Enter-a-mosaic-ID')"
                     />
 
                     <v-layout row>
                       <v-flex xs-11>
                         <v-text-field
                           v-model="currentMosaicAmount"
-                          label="Asset Amount"
+                          :label="$t('Asset-Amount')"
                           placeholder="ex. 10"
                         />
                       </v-flex>
@@ -140,7 +142,7 @@
                           <v-list-tile-content>
                             {{ mosaic.id.toHex() }}
                             <v-subheader>
-                              Amount: {{ mosaic.amount.compact() }}
+                              {{ $t('Amount') }}: {{ mosaic.amount.compact() }}
                             </v-subheader>
                           </v-list-tile-content>
                           <v-btn
@@ -159,13 +161,13 @@
 
                   <v-text-field
                     v-model="txMessage"
-                    label="Message"
-                    placeholder="Here is your XEM, Bob! - Alice"
+                    :label="$t('Message')"
+                    :placeholder="$t('Here-is-your-XEM-Bob!-Alice')"
                   />
 
                   <v-text-field
                     v-model="generationHash"
-                    label="Network generation hash"
+                    :label="$t('Generation-Hash')"
                     class="mt-3 mb-3"
                     required
                     disabled
@@ -181,12 +183,12 @@
                     <template slot="append">
                       <v-spacer />
                       <v-btn
-                        v-if="userPrivateKey == ''"
+                        v-if="userPrivateKey === ''"
                         small
                         color="primary"
                         @click="fillPrivateKeyField"
                       >
-                        Use my wallet's private key
+                        {{ $t('Use-my-wallet-s-private-key') }}
                       </v-btn>
                     </template>
                   </v-text-field>
@@ -196,18 +198,6 @@
                     :wallet-type="wallet.activeWallet.walletType"
                     @close="fillPrivateKeyField"
                   />
-                  <v-flex
-                    v-if="txRecipient == '' || userPrivateKey == ''"
-                    xs12
-                  >
-                    <v-alert
-                      :value="true"
-                      type="info"
-                    >
-                      A private key, recipient address, and amount&nbsp;
-                      are required in order to send a transaction.
-                    </v-alert>
-                  </v-flex>
                 </v-form>
               </v-flex>
               <v-card-actions>
@@ -218,7 +208,7 @@
                   color="primary mx-0"
                   @click="createTransferTransaction"
                 >
-                  Send
+                  {{ $t('Send') }}
                 </v-btn>
               </v-card-actions>
               <div class="mt-4">
@@ -298,8 +288,7 @@ const transferValidator = (pointer) => {
   const {
     userPrivateKey, generationHash, txRecipient, txAmount, txMaxFee,
   } = pointer;
-  /* eslint-disable */
-  let errorMessage = {
+  const errorMessage = {
     message: [],
     disabled: true,
   };
@@ -355,7 +344,7 @@ export default {
       txMessage: '',
       txAmount: 0,
       txMaxFee: 0,
-      txRecipient: 'SBIWHD-WZMPIX-XM2BIN-CRXAK3-H3MGA5-VHB3D2-PO5W',
+      txRecipient: '',
       userPrivateKey: '',
       signedTx: null,
       isDialogShow: false,
@@ -401,22 +390,22 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'Recipient',
+          key: this.$t('Recipient'),
           value: this.txRecipient,
         },
         {
           icon: 'add',
-          key: 'Amount',
+          key: this.$t('Amount'),
           value: this.txAmount,
         },
         {
           icon: 'add',
-          key: 'Message ',
+          key: this.$t('Message'),
           value: this.txMessage,
         },
         {
           icon: 'add',
-          key: ' Asset Attached',
+          key: this.$t('Asset-Attached'),
           value: mosaicHexList.join(' , '),
         },
       ];

@@ -1,4 +1,4 @@
-// Copyright (C) 2019 Contributors as noted in the AUTHORS file
+if sta// Copyright (C) 2019 Contributors as noted in the AUTHORS file
 //
 // This file is part of nem2-wallet-browserextension.
 //
@@ -23,7 +23,7 @@
           :value="true"
           type="info"
         >
-          There is nothing to show here!
+          {{ $t('There-is-nothing-to-show-here') }}!
         </v-alert>
       </v-flex>
     </div>
@@ -56,7 +56,7 @@
                         <v-list-tile-sub-title
                           class="text--primary"
                         >
-                          Balance:&nbsp;
+                          {{ $t('Balance') }}:&nbsp;
                           {{ parseInt(currentAsset.balance).toLocaleString() }}&nbsp;
                           [{{ (currentAsset.amount/Math.pow(10, currentAsset.divisibility))
                             .toLocaleString() }}]
@@ -76,7 +76,8 @@
                               ? showPasswordInput = true
                               : spawnAliasTransaction(currentAsset)"
                           >
-                            {{ currentAsset.name ? `${'unlink alias'}` : `${'add an alias'}` }}
+                            {{ currentAsset.name
+                              ? `${$t('unlink-alias')}` : `${$t('add-an-alias')}` }}
                           </v-btn>
                           <v-btn
                             small
@@ -88,7 +89,7 @@
                               ? showPasswordInput = true
                               : spawnAssetModification(currentAsset)"
                           >
-                            Modify supply
+                            {{ $t('Modify-supply') }}
                           </v-btn>
                         </div>
                       </div>
@@ -98,13 +99,17 @@
               </template>
               <v-list-tile-content>
                 <div class="asset-detail">
-                  <v-list-tile-title>Meta ID: {{ currentAsset.metaId }}</v-list-tile-title>
-                  <v-list-tile-sub-title>Owner: {{ currentAsset.owner }}</v-list-tile-sub-title>
+                  <v-list-tile-title>
+                    {{ $t('Meta-ID') }}: {{ currentAsset.metaId }}
+                  </v-list-tile-title>
                   <v-list-tile-sub-title>
-                    supply: {{ currentAsset.supply.toLocaleString() }} |&nbsp;
-                    divisibility: {{ currentAsset.divisibility }} |&nbsp;
-                    supplyMutable: {{ currentAsset.supplyMutable }} |&nbsp;
-                    transferable: {{ currentAsset.transferable }}
+                    {{ $t('Owner') }}: {{ currentAsset.owner }}
+                  </v-list-tile-sub-title>
+                  <v-list-tile-sub-title>
+                    {{ $t('Supply') }}: {{ currentAsset.supply.toLocaleString() }} |&nbsp;
+                    {{ $t('Divisibility') }}: {{ currentAsset.divisibility }} |&nbsp;
+                    {{ $t('Mutable-supply') }}: {{ currentAsset.supplyMutable }} |&nbsp;
+                    {{ $t('Transferable') }}: {{ currentAsset.transferable }}
                   </v-list-tile-sub-title>
                 </div>
               </v-list-tile-content>
@@ -124,12 +129,12 @@
       @close="showPasswordInput = false"
     />
     <AssetModification
-      :visible="modifyAsset"
+      :visible="showModifyAsset"
       :active-asset="activeAsset"
       @close="modifyAsset = false"
     />
     <AssetAlias
-      :visible="assetAlias"
+      :visible="showAssetAlias"
       :active-asset="activeAsset"
       @close="assetAlias = false"
     />
@@ -166,8 +171,8 @@ export default {
       walletTypes,
       index: 0,
       showPasswordInput: false,
-      modifyAsset: false,
-      assetAlias: false,
+      showModifyAsset: false,
+      showAssetAlias: false,
       activeAsset: { id: false, name: false },
     };
   },
@@ -175,22 +180,22 @@ export default {
   methods: {
     spawnAliasTransaction(mosaic) {
       this.activeAsset = { id: mosaic.id, name: mosaic.name };
-      this.modifyAsset = true;
+      this.showAssetAlias = true;
     },
 
     spawnAssetModification(mosaic) {
       this.activeAsset = { id: mosaic.id, name: mosaic.name };
-      this.assetAlias = true;
+      this.showModifyAsset = true;
     },
 
     expirationText(mosaic) {
       const { blockNumber } = this.application;
       const { endHeight } = mosaic;
-      if (endHeight === 0) return 'Unlimited duration mosaic';
-      if (!(blockNumber > 0)) return `Expires at height ${endHeight.toLocaleString()}`;
+      if (endHeight === 0) return this.$t('Unlimited-duration-mosaic');
+      if (blockNumber <= 0 || typeof blockNumber !== 'number') return `${this.$t('Expires-at-height')}: ${endHeight.toLocaleString()}`;
       const expiresIn = endHeight - blockNumber;
-      if (expiresIn > 0) return `Expires in ${expiresIn.toLocaleString()} blocks.`;
-      return `Expired for ${(expiresIn * -1).toLocaleString()} blocks.`;
+      if (expiresIn > 0) return `${this.$t('Expires-in-blocks', { block: expiresIn.toLocaleString() })}.`;
+      return `${this.$t('Expired-for-blocks', { block: (expiresIn * -1).toLocaleString() })}.`;
     },
   },
 };

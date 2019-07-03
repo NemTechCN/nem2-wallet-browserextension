@@ -24,7 +24,7 @@
       <v-toolbar card>
         <v-card-title primary-title>
           <h3 class="headline mb-3">
-            Create a new namespace
+            {{ $t('Create-a-new-namespace') }}
           </h3>
         </v-card-title>
         <v-spacer />
@@ -40,7 +40,7 @@
       <v-card-text>
         <v-radio-group v-model="namespaceType">
           <template v-slot:label>
-            <div>Namespace Type</div>
+            <div>{{ $t('Namespace-Type') }}</div>
           </template>
           <v-radio
             v-for="t in namespaceTypes"
@@ -53,7 +53,7 @@
         <v-text-field
           v-model="namespaceName"
           class="my-2 pa-0"
-          label="Namespace name"
+          :label="$t('Namespace-name')"
           :hint="namespaceNameHints(namespaceType)"
           required
         />
@@ -65,7 +65,7 @@
           <v-text-field
             v-model="parentNamespaceName"
             class="my-2 pa-0"
-            label="Parent Namespace name"
+            :label="$t('Parent-Namespace-name')"
             :hint="namespaceNameHints(namespaceType)"
             required
           />
@@ -77,7 +77,7 @@
           <v-text-field
             v-model="duration"
             class="my-2 pa-0"
-            label="Duration"
+            :label="$t('Duration')"
             required
             number
           />
@@ -101,7 +101,7 @@
           color="primary mx-0"
           @click="showDialog"
         >
-          Send Transaction
+          {{ $t('Send-Transaction') }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -219,17 +219,19 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: 'NamespaceType',
+          key: this.$t('Namespace-Type'),
           value: this.namespaceType === 0 ? 'RootNamespace' : 'SubNamespace',
         },
         {
           icon: 'add',
-          key: 'Namespace name',
-          value: this.namespaceType === 0 ? this.namespaceName : (`${this.parentNamespaceName}.${this.namespaceName}`),
+          key: this.$t('Namespace-Name'),
+          value: this.namespaceType === 0
+            ? this.namespaceName
+            : (`${this.parentNamespaceName}.${this.namespaceName}`),
         },
         {
           icon: 'add',
-          key: 'Duration',
+          key: this.$t('Duration'),
           value: this.duration,
         },
       ];
@@ -243,6 +245,7 @@ export default {
       console.error(error);
     },
     namespaceNameHints(namespaceType) {
+      // @TODO: hints management
       if (namespaceType === NamespaceType.RootNamespace) return 'Allowed characters are a, b, c, …, z, 0, 1, 2, …, 9, ‘, _ , -';
       return 'Allowed characters are a, b, c, …, z, 0, 1, 2, …, 9, ‘, _ , - , . ';
     },

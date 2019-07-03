@@ -44,11 +44,11 @@
 
 
             <v-tab key="0">
-              Transfer
+              {{ $t('Transfer') }}
               <v-icon>send</v-icon>
             </v-tab>
             <v-tab-item key="0">
-              <Transfer v-if="wallet.activeWallet"/>
+              <Transfer v-if="wallet.activeWallet" />
             </v-tab-item>
 
 
@@ -62,7 +62,7 @@
 
 
             <v-tab key="2">
-              filters
+              {{ $t('Filters') }}
               <v-icon>filter_list</v-icon>
             </v-tab>
             <v-tab-item key="2">
@@ -71,7 +71,7 @@
 
 
             <v-tab key="3">
-              Account Link
+              {{ $t('Account-Link') }}
               <v-icon>record_voice_over</v-icon>
             </v-tab>
             <v-tab-item key="3">
@@ -85,12 +85,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Errors from '../Errors.vue';
 import Transfer from './tabs/Transfer.vue';
 import URI from './tabs/URI.vue';
 import Filters from './tabs/Filters.vue';
 import AccountLink from './tabs/AccountLink.vue';
-import { mapState } from 'vuex';
 
 export default {
   components: {

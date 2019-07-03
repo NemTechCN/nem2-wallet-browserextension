@@ -30,7 +30,7 @@
           :value="true"
           type="info"
         >
-          This account does not own nor hold any asset.
+          {{ $t('This-account-does-not-own-any-asset') }}
         </v-alert>
       </v-flex>
     </div>
@@ -45,7 +45,7 @@
           fixed-tabs
         >
           <v-tab :key="0">
-            Assets Balance
+            {{ $t('Assets-balance') }}
           </v-tab>
 
           <v-tab-item :key="0">
@@ -53,7 +53,7 @@
           </v-tab-item>
 
           <v-tab :key="1">
-            My Assets
+            {{ $t('My-Assets') }}
           </v-tab>
           <v-tab-item :key="1">
             <AssetTab

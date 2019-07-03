@@ -1,17 +1,17 @@
 // Copyright (C) 2019 Contributors as noted in the AUTHORS file
-// 
+//
 // This file is part of nem2-wallet-browserextension.
-// 
+//
 // nem2-wallet-browserextension is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
-// 
+//
 // nem2-wallet-browserextension is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with nem2-wallet-browserextension.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,13 +29,13 @@
         </span>
         <v-text-field
           v-model="utf8String"
-          label="UTF-8 String"
-          placeholder="Just a string, a lonely string"
+          :label="$t('UTF-8-String')"
+          :placeholder="$t('Just-a-string-a-lonely-string')"
           @change="stringtoHex"
         />
         <v-text-field
           v-model="hexString"
-          label="Hex String"
+          :label="$t('Hex-String')"
           @change="hextoString"
         />
       </v-flex>
@@ -46,18 +46,18 @@
         </span>
         <v-text-field
           v-model="number"
-          label="Number"
+          :label="$t('Number')"
           type="number"
           @change="numberConvert"
         />
         <v-text-field
           v-model="hexNumber"
-          label="Hex number"
+          :label="$t('Hex-number')"
           @change="hexConvert"
         />
         <v-text-field
           v-model="uint64Array"
-          label="uint64 Array"
+          :label="$t('uint64-Array')"
           placeholder="[00...,00...]"
           @change="uint64Convert"
         />

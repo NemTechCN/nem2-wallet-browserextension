@@ -23,24 +23,24 @@
     <v-card>
       <v-card-title primary-title>
         <h3 class="headline mb-3">
-          Lock {{ walletName }}
+          {{ $t('Lock') }} {{ walletName }}
         </h3>
       </v-card-title>
       <v-card-text>
-        Lock the wallet {{ walletName }}
+        {{ $t('Lock-the-wallet') }} {{ walletName }}
         <v-card-actions>
           <v-spacer />
           <v-btn
             flat
             @click.stop="$emit('close')"
           >
-            Close
+            {{ $t('Close') }}
           </v-btn>
           <v-btn
             color="primary mx-0"
             @click="lock"
           >
-            Lock wallet
+            {{ $t('Lock-wallet') }}
           </v-btn>
         </v-card-actions>
       </v-card-text>

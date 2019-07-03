@@ -64,7 +64,7 @@
                   :value="true"
                   type="error"
                 >
-                  An error occured when getting the transaction list
+                  {{ $t('An-error-occured-when-getting-the-transaction-list') }}
                 </v-alert>
               </v-flex>
               <v-flex xs12>
@@ -124,7 +124,7 @@
                           v-if="props.item.unconfirmed"
                           class="clearfix"
                         >
-                          <pre>unconfirmed</pre>
+                          <pre>{{ $t('unconfirmed') }}</pre>
                         </span>
                         <span
                           v-if="!props.item.unconfirmed"
@@ -232,9 +232,21 @@ export default {
   data() {
     return {
       headers: [
-        { text: 'Block / Type', value: 'blockNumber', hoverText: 'sort by block number' },
-        { text: 'Main properties', value: '', hoverText: 'no sorting action' },
-        { text: 'Signer / Recipient', value: 'recipient', hoverText: 'sort by recipient' },
+        {
+          text: this.$t('Block / Type'),
+          value: 'blockNumber',
+          hoverText: 'sort by block number',
+        },
+        {
+          text: this.$t('Main properties'),
+          value: '',
+          hoverText: 'no sorting action',
+        },
+        {
+          text: this.$t('Signer / Recipient'),
+          value: 'recipient',
+          hoverText: 'sort by recipient',
+        },
       ],
       rowsPerPageOptions: [
         25, 50, { text: 'All', value: -1 },
@@ -248,7 +260,6 @@ export default {
   computed: {
     ...mapState([
       'transactions',
-      'application',
       'wallet',
     ], {
       transactions: state => state.transactions,
@@ -284,6 +295,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>

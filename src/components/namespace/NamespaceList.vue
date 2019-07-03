@@ -52,7 +52,7 @@
                         ? showPasswordInput = true
                         : spawnExtendNamespace(iterNamespace)"
                     >
-                      extend
+                      {{ $t('Extend') }}
                     </a>
                   </div>
                 </v-list-tile-sub-title>
@@ -149,13 +149,17 @@ export default {
       this.currentAlias = namespace.aliasText;
       this.aliasTransaction = true;
     },
-    expirationText(namespace) {
+    expirationText(iterNamespace) {
+      const { endHeight } = iterNamespace;
       const { blockNumber } = this.application;
-      const { endHeight } = namespace;
-      if (!(blockNumber > 0)) return `This namespace expires at height ${endHeight.toLocaleString()}`;
+      if (blockNumber <= 0 || typeof blockNumber !== 'number') {
+        return `${this.$t('This-namespace-expires-at-height')} ${endHeight.toLocaleString()})`;
+      }
       const expiresIn = endHeight - blockNumber;
-      if (expiresIn > 0) return `This namespace expires in ${expiresIn.toLocaleString()} blocks.`;
-      return `This namespace has been expired for ${(expiresIn * -1).toLocaleString()} blocks.`;
+      if (expiresIn > 0) {
+        return this.$t('This-namespace-expires-in-blocks.', { block: expiresIn.toLocaleString() });
+      }
+      return this.$t('This-namespace-has-been-expired-for-blocks.', { block: (expiresIn * -1).toLocaleString() });
     },
   },
 };

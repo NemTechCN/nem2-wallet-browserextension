@@ -38,7 +38,7 @@
         card
         prominent
       >
-        <v-toolbar-title>Link or Unlink an account</v-toolbar-title>
+        <v-toolbar-title>{{ $t('Link-or-Unlink-an-account') }}</v-toolbar-title>
       </v-toolbar>
 
       <LinkConfigure />

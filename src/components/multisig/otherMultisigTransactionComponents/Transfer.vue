@@ -41,7 +41,9 @@
               card
               prominent
             >
-              <v-toolbar-title>Transfer Transaction</v-toolbar-title>
+              <v-toolbar-title>
+                {{ $t('Transfer-Transaction') }}
+              </v-toolbar-title>
 
               <v-spacer />
               <v-btn
@@ -55,46 +57,45 @@
 
             <v-card-text>
               <p class="mb-4 mt-4">
-                Current Node:
+                {{ $t('Current-node') }}:
                 <a
                   :href="application.activeNode"
                   target="_new"
                 >{{ application.activeNode }}</a>
-                (Dragon)
               </p>
               <v-flex xs12>
                 <v-form lazy-validation>
                   <v-text-field
                     v-model="txRecipient"
-                    label="Recipient's address"
+                    :label="$t('Recipient-s-address')"
                     placeholder="ex. SB2JNF-UZ4MQP-BBDEQ2-C4QW2U-56PPVK-KMAMDU-77IE"
                     required
                   />
 
                   <v-text-field
                     v-model="txAmount"
-                    label="cat.currency amount(relative)"
+                    :label="`cat.currency`"
                     placeholder="ex. 10"
                     type="number"
                   />
 
                   <v-text-field
                     v-model="txMaxFee"
-                    label="Max fee"
+                    :label="$t('Max-Fee')"
                     placeholder="ex. 10"
                     type="number"
                   />
 
                   <v-text-field
                     v-model="generationHash"
-                    label="Max fee"
+                    :label="$t('Generation-Hash')"
                     placeholder="ex. 10"
                     type="number"
                   />
 
                   <v-checkbox
                     v-model="checkbox"
-                    label="Sending other assets?"
+                    :label="$t('Sending-other-assets?')"
                   />
                   <v-flex
                     v-if="checkbox"
@@ -105,20 +106,20 @@
                       v-if="mutisigAccount.mosaics.length > 0"
                       v-model="currentMosaicName"
                       :items="mutisigAccount.mosaics.map((mosaics)=> mosaics.id.toHex())"
-                      label="Chose an asset"
+                      :label="$t('Chose-an-asset')"
                     />
 
                     <v-text-field
                       v-if="mutisigAccount.mosaics.length == 0"
                       v-model="currentMosaicName"
-                      label="Enter a mosaic ID"
+                      :label="$t('Enter-a-mosaic-ID')"
                     />
 
                     <v-layout row>
                       <v-flex xs-11>
                         <v-text-field
                           v-model="currentMosaicAmount"
-                          label="Asset Amount"
+                          :label="$t('Asset-Amount')"
                           placeholder="ex. 10"
                         />
                       </v-flex>
@@ -138,14 +139,16 @@
                         :key="index"
                         two-line
                       >
-                        <v-list-tile v-if="!(mosaic.id.toHex() == currentXEM.id.toHex())">
+                        <v-list-tile
+                          v-if="!(mosaic.id.toHex() === currentXEM.id.toHex())"
+                        >
                           <v-list-tile-action>
                             <v-icon>group_work</v-icon>
                           </v-list-tile-action>
                           <v-list-tile-content>
                             {{ mosaic.id.toHex() }}
                             <v-subheader>
-                              Amount: {{ mosaic.amount.compact() }}
+                              {{ $t('Amount') }}: {{ mosaic.amount.compact() }}
                             </v-subheader>
                           </v-list-tile-content>
                           <v-btn
@@ -163,19 +166,21 @@
                   <v-spacer />
                   <v-text-field
                     v-model="txMessage"
-                    label="Message"
-                    placeholder="Here is your XEM, Bob! - Alice"
+                    :label="$t('Message')"
+                    :placeholder="$t('Here-is-your-XEM-Bob!-Alice')"
                   />
 
                   <v-flex
-                    v-if="txRecipient == ''"
+                    v-if="txRecipient === ''"
                     xs12
                   >
                     <v-alert
                       :value="true"
                       type="info"
                     >
-                      A recipient address is required in order to send a transaction.
+                      {{ $t(
+                        'A-recipient-address-is-required-in-order-to-send-a-transaction'
+                      ) }}.
                     </v-alert>
                   </v-flex>
                 </v-form>
@@ -183,7 +188,7 @@
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-                  :disabled="txRecipient == ''"
+                  :disabled="txRecipient === ''"
                   color="primary mx-0"
                   @click="sendTx"
                 >
@@ -204,17 +209,21 @@
               >
                 <v-card>
                   <v-card-title class="headline">
-                    Send this transaction?
+                    {{ $t('Send-this-transaction?') }}
                   </v-card-title>
                   <v-card-text>
-                    Are you sure you that you want to send a transaction with the following details?
+                    {{ $t(
+                      'Are-you-sure-you-that-you-want-to-send-a-transaction-with'
+                    ) }}
                     <v-list>
                       <v-list-tile>
                         <v-list-tile-action>
                           <v-icon>person_outline</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                          <v-list-tile-title>Recipient: {{ txRecipient }}</v-list-tile-title>
+                          <v-list-tile-title>
+                            {{ $t('Recipient') }}: {{ txRecipient }}
+                          </v-list-tile-title>
                         </v-list-tile-content>
                       </v-list-tile>
 
@@ -223,7 +232,9 @@
                           <v-icon>monetization_on</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                          <v-list-tile-title>Amount: {{ txAmount }} XEM</v-list-tile-title>
+                          <v-list-tile-title>
+                            {{ $t('Amount') }}: {{ txAmount }} cat.currency
+                          </v-list-tile-title>
                         </v-list-tile-content>
                       </v-list-tile>
 
@@ -232,7 +243,9 @@
                           <v-icon>message</v-icon>
                         </v-list-tile-action>
                         <v-list-tile-content>
-                          <v-list-tile-title>Message: {{ txMessage }}</v-list-tile-title>
+                          <v-list-tile-title>
+                            {{ $t('Message') }}: {{ txMessage }}
+                          </v-list-tile-title>
                         </v-list-tile-content>
                       </v-list-tile>
                     </v-list>
@@ -244,7 +257,7 @@
                           </v-list-tile-action>
                           <v-list-tile-content>
                             <v-list-tile-title>
-                              Asset Attached: {{ mosaic.id.id.toHex() }}
+                              {{ $t('Asset-Attached') }}: {{ mosaic.id.id.toHex() }}
                             </v-list-tile-title>
                           </v-list-tile-content>
                         </v-list-tile>
@@ -258,14 +271,14 @@
                       color="info"
                       @click="dialog = false"
                     >
-                      Cancel
+                      {{ $t('Cancel') }}
                     </v-btn>
 
                     <v-btn
                       color="info"
                       @click="transmitTransaction"
                     >
-                      Yes, send it!
+                      {{ $t('Yes-send-it') }}
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -304,6 +317,7 @@ export default {
   components: {
     SendConfirmation,
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ['currentMultisigPublicKey'],
   store,
   data() {
@@ -312,7 +326,7 @@ export default {
       txMessage: '',
       txAmount: 0,
       txMaxFee: 0,
-      txRecipient: 'SBIWHD-WZMPIX-XM2BIN-CRXAK3-H3MGA5-VHB3D2-PO5W',
+      txRecipient: '',
       userPrivateKey: '',
       signedTx: null,
       transferTx: null,
