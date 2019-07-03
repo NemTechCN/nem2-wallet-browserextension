@@ -69,7 +69,7 @@ export default {
     CreateTransferInvoice,
     UriTransactionList,
   },
-  computed: mapState(['transactions']),
+  computed: mapState(['transactions', 'assets']),
   created() {
     try {
       if (!this.$route.query.transaction) {
@@ -80,8 +80,8 @@ export default {
       const transaction = transactionURI.toTransaction();
       const { generationHash } = transactionURI;
 
-      const mosaics = this.mosaics || [NetworkCurrencyMosaic.createRelative(0)];
-      const formattedMosaics = this.mosaics.map((mosaic) => {
+      const mosaics = transaction.mosaics || [NetworkCurrencyMosaic.createRelative(0)];
+      const formattedMosaics = mosaics.map((mosaic) => {
         if (mosaic.id.fullName) {
           return {
             ...mosaic,
