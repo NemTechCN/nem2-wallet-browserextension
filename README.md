@@ -61,6 +61,7 @@ $> npm run watch & npm run web-ext:run
 `web-ext` will open your Firefox browser with the extension loaded.
 
 Developing in web mode with hot reload:
+(Note that if you just installed the dependencies, you need to run npm run production before launching the hot reload mode)
 ```
 $> npm run hot
 ```
