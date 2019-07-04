@@ -305,16 +305,17 @@ export default {
       return QRCodeGenerator.createExportObject(qrData, NetworkType.MIJIN_TEST).toBase64();
     },
     ownedAssets() {
-      if (!this.assets.assets[this.wallet.activeWallet.name]) return false;
-      if (this.assets.assets[this.wallet.activeWallet.name].length === 0) return 'none';
+      if (this.assets.loading_getMosaicsByAddress) return false;
+      if (!this.assets.assets[this.wallet.activeWallet.name]
+       || this.assets.assets[this.wallet.activeWallet.name].length === 0) return 'none';
       return this.assets.assets[this.wallet.activeWallet.name]
         .filter(x => (x.balance > 0 && x.active));
     },
     ownedNamespaces() {
-      if (!this.namespaces.namespaces[this.wallet.activeWallet.name]) return false;
-      if (this.namespaces.namespaces[this.wallet.activeWallet.name].length === 0) return 'none';
-      return this.namespaces.namespaces[this.wallet.activeWallet.name]
-        .filter(x => x.active);
+      if (this.namespaces.loading_getNamespacesByAddress) return false;
+      if (!this.namespaces.namespaces[this.wallet.activeWallet.name]
+       || this.namespaces.namespaces[this.wallet.activeWallet.name].length === 0) return 'none';
+      return this.namespaces.namespaces[this.wallet.activeWallet.name];
     },
   },
   methods: {

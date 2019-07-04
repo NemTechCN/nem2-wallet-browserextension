@@ -19,7 +19,6 @@
 
 import { AccountHttp } from 'nem2-sdk';
 import { formatAccountInfo } from './formatAccountInfo';
-import errorMessages from '../errorMessage/error-message';
 
 const getAccountInfo = (wallet, activeNode) => new Promise((resolve, reject) => {
   const accountHttp = new AccountHttp(activeNode);
@@ -30,13 +29,7 @@ const getAccountInfo = (wallet, activeNode) => new Promise((resolve, reject) => 
       resolve(formatAccountInfo(ai));
     },
     (err) => {
-      if (err.response && JSON.parse(err.response.text).code === 'ResourceNotFound') {
-        reject(new Error(errorMessages.ADDRESS_NOT_KNOWN));
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(err);
-        reject(new Error(errorMessages.CONNECTION_ERROR));
-      }
+      reject(new Error(err));
     },
   );
 });

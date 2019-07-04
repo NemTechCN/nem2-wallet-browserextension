@@ -101,10 +101,13 @@ const actions = {
   },
 
 
-  SET_ERROR({ commit }, errorMessage) {
-    const errMsg = typeof errorMessage === 'string'
-      ? errorMessage : errorMessage.toString();
-    commit('setError', errMsg);
+  SET_ERROR({ commit, rootState }, { errorMessage, wallet }) {
+    const { activeWallet } = rootState.wallet;
+    if (wallet && activeWallet.name === wallet.name) {
+      const errMsg = typeof errorMessage === 'string'
+        ? errorMessage : errorMessage.toString();
+      commit('setError', errMsg);
+    }
   },
 
 
@@ -147,6 +150,7 @@ const actions = {
 
   SET_GENERATION_HASH({ commit, dispatch, rootState }) {
     return new Promise(async (resolve, reject) => {
+      dispatch('application/RESET_ERRORS', null, { root: true });
       const endpoint = rootState.application.activeNode;
       try {
         const blockHttp = new BlockHttp(endpoint);

@@ -98,7 +98,10 @@ const actions = {
     rootState,
   }, { wallet, mode }) {
     if (mode === GET_ASSETS_MODES.ON_WALLET_CHANGE
-      && getters.GET_ASSETS) return;
+      && getters.GET_ASSETS) {
+      commit('setLoading_getMosaicsByAddress', false);
+      return;
+    }
 
     await commit('setLoading_getMosaicsByAddress', true);
 
@@ -107,13 +110,12 @@ const actions = {
         wallet, rootState.application.activeNode,
       );
       commit('setAccountAssets', { wallet, assets });
+      commit('setLoading_getMosaicsByAddress', false);
       dispatch('UPDATE_NETWORK_ASSETS', { assets });
     } catch (error) {
-      dispatch('application/SET_ERROR', error, { root: true });
-      // eslint-disable-next-line no-console
-      console.error(error, 'GET_ASSETS_BY_ADDRESS');
+      commit('setAccountAssets', { wallet, assets: false });
+      commit('setLoading_getMosaicsByAddress', false);
     }
-    commit('setLoading_getMosaicsByAddress', false);
   },
 };
 

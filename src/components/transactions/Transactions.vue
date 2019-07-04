@@ -269,7 +269,7 @@ export default {
     },
   },
   mounted() {
-    if (this.presetFilter === false) return;
+    if (this.presetFilter === 'false') return;
     if (this.presetFilter === '') {
       this.$store.dispatch('transactions/RESET_TRANSACTION_FILTERS');
     } else {

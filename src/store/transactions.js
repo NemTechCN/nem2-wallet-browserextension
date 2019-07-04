@@ -235,7 +235,7 @@ const actions = {
         transactions: transactionsToStore,
       });
     } catch (error) {
-      dispatch('application/SET_ERROR', error, { root: true });
+      dispatch('application/SET_ERROR', { errorMessage: error, wallet }, { root: true });
       // eslint-disable-next-line no-console
       console.error(error, 'GET_TRANSACTIONS_BY_ID');
     }

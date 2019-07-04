@@ -62,12 +62,11 @@ const actions = {
     try {
       const namespaces = await getNamespacesByAddress(wallet, rootState.application.activeNode);
       commit('setAccountNamespaces', { wallet, namespaces });
+      commit('setLoading_getNamespacesByAddress', false);
     } catch (error) {
-      dispatch('application/SET_ERROR', error, { root: true });
-      // eslint-disable-next-line no-console
-      console.error(error, 'GET_NAMESPACES_BY_ADDRESS');
+      dispatch('application/SET_ERROR', { errorMessage: error, wallet }, { root: true });
+      commit('setLoading_getNamespacesByAddress', false);
     }
-    commit('setLoading_getNamespacesByAddress', false);
   },
 };
 

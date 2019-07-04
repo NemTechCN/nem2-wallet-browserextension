@@ -65,11 +65,11 @@ const actions = {
       const multisigInfo = await accountHttp.getMultisigAccountInfo(address).toPromise();
       commit('setAccountMultisigInfo', { wallet, multisigInfo });
     } catch (error) {
-      commit('setAccountMultisigInfo', { wallet, multisigInfo: false });
-      if (error.message !== 'Not Found') {
+      if (error.statusMessage !== 'Not Found') {
         // eslint-disable-next-line no-console
         console.error(error, 'GET_MULTISIG_INFO');
       }
+      commit('setAccountMultisigInfo', { wallet, multisigInfo: false });
     }
     commit('setLoading_getMultisigInfo', false);
   },

@@ -49,32 +49,36 @@ const actions = {
   },
 
 
-  async FETCH_ACCOUNT_INFO(
-    {
-      commit,
-      dispatch,
-      getters,
-      rootState,
-    }, wallet,
-  ) {
-    dispatch('application/RESET_ERRORS', null, { root: true });
+  FETCH_ACCOUNT_INFO({
+    commit,
+    dispatch,
+    getters,
+    rootState,
+  }, wallet) {
+    return new Promise(async (resolve, reject) => {
+      dispatch('application/RESET_ERRORS', null, { root: true });
 
-    if (getters.GET_ACCOUNT_INFO) {
-      commit('setLoading_getAccountInfo', false);
-      return;
-    }
+      if (getters.GET_ACCOUNT_INFO) {
+        commit('setLoading_getAccountInfo', false);
+        resolve(true);
+      }
 
-    commit('setLoading_getAccountInfo', true);
-
-    try {
-      const accountInfo = await getAccountInfo(wallet, rootState.application.activeNode);
-      commit('setAccountInfo', { wallet, accountInfo });
-    } catch (error) {
-      dispatch('application/SET_ERROR', error, { root: true });
-      commit('setLoading_getAccountInfo', false);
-      throw new Error(`${error}, FETCH_ACCOUNT_INFO`);
-    }
-    commit('setLoading_getAccountInfo', false);
+      commit('setLoading_getAccountInfo', true);
+      try {
+        const accountInfo = await getAccountInfo(wallet, rootState.application.activeNode);
+        commit('setAccountInfo', { wallet, accountInfo });
+        commit('setLoading_getAccountInfo', false);
+        resolve(true);
+      } catch (error) {
+        dispatch('application/SET_ERROR', {
+          errorMessage: 'This wallet is not known by the network. To activate it, you need to send a transaction to it from another wallet',
+          wallet,
+        },
+        { root: true });
+        commit('setLoading_getAccountInfo', false);
+        reject(error);
+      }
+    });
   },
 };
 

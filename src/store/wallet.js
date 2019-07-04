@@ -244,6 +244,7 @@ const actions = {
     commit,
   }, argWallet) {
     // @TODO: refactor
+    if (argWallet === false) return;
 
     await dispatch('application/SET_ALL_LOADING_STATES', true, { root: true });
     const oldListener = getters.GET_LISTENER;
@@ -251,22 +252,26 @@ const actions = {
 
 
     // Get the generationHash of the network
-    // And check if the network is reachable at the same time
+    // THIS IS THE NETWORK CONNECTIVITY TEST
     try {
       await dispatch(
         'application/SET_GENERATION_HASH', '', { root: true },
       );
     } catch (error) {
+      const errorMessage = 'The node is unreachable, please verify the URL and your internet connection.';
+      await dispatch(
+        'application/SET_ERROR',
+        { errorMessage, wallet: argWallet },
+        { root: true },
+      );
+      await dispatch('application/SET_ALL_LOADING_STATES', false, { root: true });
       return;
     }
-
-    if (argWallet === false) return;
 
     try {
       await dispatch('accountInfo/FETCH_ACCOUNT_INFO', argWallet, { root: true });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error, 'FETCH_WALLET_DATA');
+      dispatch('application/SET_ALL_LOADING_STATES', false, { root: true });
       return;
     }
 
@@ -277,11 +282,13 @@ const actions = {
     if (wallet.publicAccount
       && (!wallet.publicAccount.publicKey
         || wallet.publicAccount.publicKey === emptyPublicKey)) {
-      dispatch(
+      const errorMessage = 'This address is not known by the network. If it should, please try with another node, or verify your internet connection.';
+      await dispatch(
         'application/SET_ERROR',
-        'This address is not known by the network. If it should, please try with another node, or verify your internet connection.',
+        { errorMessage, wallet },
         { root: true },
       );
+      return;
     }
 
     if ((!argWallet.publicAccount.publicKey
@@ -312,11 +319,6 @@ const actions = {
         { wallet, mode: GET_ASSETS_MODES.ON_WALLET_CHANGE },
         { root: true },
       ),
-      dispatch(
-        'multisig/REFRESH_MULTISIG_INFO',
-        { wallet, mode: GET_MULTISIG_MODES.ON_WALLET_CHANGE },
-        { root: true },
-      ),
     ]);
 
     // Fetch Assets before transactions to avoid unnecessary asset names lookups
@@ -329,9 +331,18 @@ const actions = {
       );
     }
 
+    try {
+      await dispatch(
+        'multisig/REFRESH_MULTISIG_INFO',
+        { wallet, mode: GET_MULTISIG_MODES.ON_WALLET_CHANGE },
+        { root: true },
+      );
+    } catch (error) {
+      // Do nothing
+    }
+
     const wsEndpoint = rootState.application
       .activeNode.toLowerCase().replace('http', 'ws');
-
 
     commit('createListener', new Listener(wsEndpoint, WebSocket));
     const listener = getters.GET_LISTENER;
