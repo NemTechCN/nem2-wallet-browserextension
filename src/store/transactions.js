@@ -96,7 +96,9 @@ const actions = {
 
 
   async HANDLE_NEW_TRANSACTIONS({ dispatch, rootState }, transactions) {
-    // This function is hadnling mosaic naming in a transaction
+    // This function is handling mosaic naming in a transaction
+    // All the names that are known are stored in rootState.assets.networkAssets[generationHash]
+    // It aims to do as less network calls as possible
 
     const { activeNode } = rootState.application;
     const generationHash = rootState.application.generationHashes[activeNode];
