@@ -20,6 +20,8 @@
  */
 import Vue from 'vue';
 import { MosaicId, MosaicHttp, NamespaceHttp } from 'nem2-sdk';
+import request from 'request';
+
 import getAccountTransactionsById from '../infrastructure/transactions/getAccountTransactionsById';
 import { removeDuplicatesAndSortByBlockNumber, formatTransactions } from '../infrastructure/transactions/formatTransactions';
 import {
@@ -94,6 +96,8 @@ const actions = {
 
 
   async HANDLE_NEW_TRANSACTIONS({ dispatch, rootState }, transactions) {
+    // This function is hadnling mosaic naming in a transaction
+
     const { activeNode } = rootState.application;
     const generationHash = rootState.application.generationHashes[activeNode];
     const networkAssets = rootState.assets.networkAssets[generationHash] || [];
@@ -278,6 +282,97 @@ const actions = {
     commit('updateActiveTransaction', transaction);
   },
 
+  async HANDLE_ERRORED_TRANSACTION(
+    {
+      commit, dispatch, rootState, getters,
+    }, { transaction, wallet, rejectionReason },
+  ) {
+    try {
+      const networkAssets = rootState.assets.networkAssets[transaction.generationHash] || [];
+      const formattedTx = await formatTransactions(
+        [{ ...transaction, rejectionReason }], networkAssets,
+      );
+
+      const oldTransactions = await getters.GET_TRANSACTIONS || [];
+      const transactionsToStore = [...formattedTx, ...oldTransactions];
+
+      commit('setAccountTransactions', {
+        wallet,
+        transactions: transactionsToStore,
+      });
+      dispatch(
+        'transactions/TRIGGER_ERRORED_TRANSACTION_SNACKBAR',
+        { type1: rejectionReason, transaction },
+        { root: true },
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error, 'HANDLE_ERRORED_TRANSACTION');
+    }
+  },
+
+  async HANDLE_ANNOUNCED_TRANSACTIONS({ dispatch, getters }, { transactions, wallet }) {
+    // Takes all sent transactions as an input
+    // It makes a GET request to the endpoint if a transactions is not returned
+    // By the unconfirmed or confirmed listeners after the setTimeout interval
+
+    try {
+      transactions.forEach(tx => dispatch(
+        'TRIGGER_TRANSACTION_SNACKBAR',
+        { tx, status: 'SENT' },
+      ));
+
+      setTimeout(async () => {
+        const knownTransactions = await getters.GET_TRANSACTIONS || [];
+        const knownTransactionsHashes = knownTransactions
+          .map(({ transactionHash }) => transactionHash);
+
+        const missingTx = transactions
+          .filter(tx => knownTransactionsHashes.indexOf(tx.transactionInfo.hash) === -1);
+
+        if (missingTx.length === 0) return;
+        const missingTxPromises = missingTx
+          .map(tx => new Promise(async (resolve) => {
+            const url = `${tx.endpoint}/transaction/${tx.transactionInfo.hash}/status`;
+            request(url, (error, response, body) => {
+              if (!error && response.statusCode === 200) {
+                const res = JSON.parse(body);
+                if (res.group === 'failed') {
+                  dispatch(
+                    'HANDLE_ERRORED_TRANSACTION',
+                    {
+                      transaction: tx,
+                      wallet,
+                      rejectionReason: res.status,
+                    },
+                  );
+                }
+              } else {
+                dispatch(
+                  'HANDLE_ERRORED_TRANSACTION',
+                  {
+                    transaction: tx,
+                    wallet,
+                    rejectionReason: 'error in announce',
+                  },
+                );
+              }
+            });
+            resolve(true);
+          }));
+
+        try {
+          await Promise.all(missingTxPromises);
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(error, 'HANDLE_ANNOUNCED_TRANSACTION - TIMEOUT');
+        }
+      }, 5000);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error, 'HANDLE_ANNOUNCED_TRANSACTION');
+    }
+  },
 
   async FORMAT_TRANSACTION_FROM_LISTENER({ dispatch, commit, getters }, { transaction, wallet }) {
     try {
@@ -361,9 +456,10 @@ const actions = {
   },
 
   TRIGGER_TRANSACTION_SNACKBAR({ dispatch }, { tx, status }) {
+    const type1 = tx.type1 || txTypeNameFromTypeId(Number(tx.type));
     dispatch(
       'application/SET_SNACKBAR_TEXT',
-      { bool: true, text: `New ${tx.type1} ${status}!` },
+      { bool: true, text: `New ${type1} ${status}!` },
       { root: true },
     );
   },

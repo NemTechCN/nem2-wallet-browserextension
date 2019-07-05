@@ -116,8 +116,7 @@
                         $store.dispatch(
                           'transactions/UPDATE_ACTIVE_TRANSACTION',
                           props.item,
-                        );
-                      "
+                        );"
                     >
                       <td class="text-xs-left">
                         <span
@@ -127,13 +126,19 @@
                           <pre>{{ $t('unconfirmed') }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.unconfirmed"
+                          v-if="props.item.rejected"
+                          class="clearfix"
+                        >
+                          <pre>{{ $t('rejected') }}</pre>
+                        </span>
+                        <span
+                          v-if="!props.item.unconfirmed && !props.item.rejected"
                           class="clearfix"
                         >
                           <pre>{{ props.item.blockNumber.toLocaleString() }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.unconfirmed"
+                          v-if="!props.item.unconfirmed && !props.item.rejected"
                           class="clearfix"
                         >
                           <pre>{{ props.item.date }}</pre>

@@ -211,16 +211,6 @@
                   {{ $t('Send') }}
                 </v-btn>
               </v-card-actions>
-              <div class="mt-4">
-                <SendConfirmation
-                  :tx-hash="txHash"
-                  :tx-recipient="txRecipient"
-                  :node-u-r-l="application.activeNode"
-                  :tx-send-data="txSendResults"
-                  :generation-hash="generationHash"
-                />
-              </div>
-
 
               <Confirmation
                 v-model="isDialogShow"
@@ -279,7 +269,6 @@ import {
 import { mapState } from 'vuex';
 import ErrorMessageComponent from '../errorMessage/ErrorMessage.vue';
 import store from '../../store/index';
-import SendConfirmation from '../signature/SendConfirmation.vue';
 import Confirmation from '../signature/Confirmation.vue';
 import PasswordInput from '../wallet/PasswordInput.vue';
 import ErrorMessage from '../../infrastructure/errorMessage/error-message';
@@ -329,7 +318,6 @@ const transferValidator = (pointer) => {
 
 export default {
   components: {
-    SendConfirmation,
     PasswordInput,
     ErrorMessageComponent,
     Confirmation,
@@ -428,7 +416,6 @@ export default {
         UInt64.fromUint(this.txMaxFee),
       );
       this.transactions = [transferTransaction];
-      this.resetFields();
     },
 
     addMosaic() {
@@ -468,6 +455,7 @@ export default {
     },
 
     txSent(result) {
+      this.resetFields();
       this.txSendResults.push(result);
     },
     txError(error) {

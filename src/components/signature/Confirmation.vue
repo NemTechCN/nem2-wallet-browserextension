@@ -57,25 +57,10 @@ import request from 'request';
 import { mapState } from 'vuex';
 import { filter, timeout } from 'rxjs/operators';
 import {
-  TransactionHttp, Listener, TransactionType, CosignatureTransaction,
+  TransactionHttp, Listener, TransactionType, CosignatureTransaction, PublicAccount, NetworkType,
 } from 'nem2-sdk';
 import store from '../../store/index';
 
-function signTransactions(transactions, account, generationHash) {
-  return transactions.map((tx) => {
-    if (tx.type === TransactionType.LOCK) {
-      return tx;
-    }
-    return account.sign(tx, generationHash);
-  }).map((tx, index, txs) => {
-    if (tx.type === TransactionType.LOCK) {
-      const txWithHash = tx;
-      txWithHash.hash = txs[index + 1].hash;
-      return account.sign(txWithHash, generationHash);
-    }
-    return tx;
-  });
-}
 
 function sendSequential(unsignedTransactions, transactions, endpoint, address, emitter, webhook) {
   const wsEndpoint = endpoint.replace('http', 'ws');
@@ -227,23 +212,41 @@ export default {
         this.signAndAnnounce();
       }
     },
-    signAndAnnounce() {
+
+
+    async signAndAnnounce() {
       if (!this.wallet.activeWallet) return;
-      const endpoint = this.application.activeNode;
-      const { account } = this.wallet.activeWallet;
-      const { address } = account;
-      const unsignedTransactions =  this.transactions;
-      const transactions = signTransactions(
-        this.transactions,
-        account,
-        this.generationHash,
-      );
-      const emitter = (type, value) => {
-        this.$emit(type, value);
-      };
-      sendSequential(unsignedTransactions, transactions, endpoint, address, emitter, this.webhook);
-      this.toggleDialog();
+      try {
+        const endpoint = this.application.activeNode;
+        const { address } = this.wallet.activeWallet.account;
+        const unsignedTransactions = this.transactions;
+
+        const transactions = await this.signTransactions({
+          transactions: this.transactions,
+          wallet: this.wallet.activeWallet,
+          generationHash: this.generationHash,
+          endpoint,
+        });
+
+        const emitter = (type, value) => {
+          this.$emit(type, value);
+        };
+        sendSequential(
+          unsignedTransactions,
+          transactions,
+          endpoint,
+          address,
+          emitter,
+          this.webhook,
+        );
+        this.toggleDialog();
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.log(error, 'ERROR at signAndAnnounce');
+      }
     },
+
+
     cosignAndAnnounce() {
       if (!this.wallet.activeWallet) return;
       const endpoint = this.application.activeNode;
@@ -270,6 +273,67 @@ export default {
         });
       });
     },
+
+
+    signTransactions({
+      transactions,
+      wallet,
+      generationHash,
+      endpoint,
+    }) {
+      return new Promise(async (resolve, reject) => {
+        const { account } = wallet;
+        const signerPublicAccount = PublicAccount
+          .createFromPublicKey(account.publicKey, NetworkType.MIJIN_TEST);
+        const t = transactions.map((tx, index, txs) => {
+          if (tx.type === TransactionType.LOCK) return { tx, lockToSign: true };
+
+          const signedTx = account.sign(tx, generationHash);
+
+          const txWithHash = {
+            ...txs[index],
+            signer: signerPublicAccount,
+            transactionInfo: { hash: signedTx.hash },
+            endpoint,
+            generationHash,
+          };
+
+          return { signedTx, txWithHash };
+        }).map((object, index, txs) => {
+          if (!object.lockToSign) return object;
+
+          const txWithHash = { tx: object.tx, hash: txs[index + 1].hash };
+          const signedTx = account.sign(txWithHash, generationHash);
+          return {
+            signedTx,
+            txWithHash: {
+              ...txWithHash,
+              signer: signerPublicAccount,
+              transactionInfo: { hash: signedTx.hash },
+              endpoint,
+              generationHash,
+            },
+          };
+        });
+
+        try {
+          const transactionsToFormat = t
+            .map(({ txWithHash }) => ({ ...txWithHash }));
+          const transactionsToAnnounce = t.map(({ signedTx }) => signedTx);
+
+          this.$store.dispatch('transactions/HANDLE_ANNOUNCED_TRANSACTIONS', {
+            transactions: transactionsToFormat,
+            wallet,
+            generationHash,
+          });
+
+          resolve(transactionsToAnnounce);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
   },
 };
+
 </script>

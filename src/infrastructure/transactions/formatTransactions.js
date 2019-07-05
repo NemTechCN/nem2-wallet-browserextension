@@ -372,6 +372,13 @@ const formatTransaction = (
       const type2 = tx.aggregate ? tx.aggregate : '';
       const { body, headerExtension } = await getBody(tx, namedAssets);
       const { type1, mainProps } = headerExtension;
+      if (tx.rejectionReason) mainProps.push({ key: 'Rejected for: ', value: tx.rejectionReason });
+      if (tx.rejectionReason) {
+        body.push(
+          { key: 'Rejected for: ', value: tx.rejectionReason },
+        );
+      }
+
       const numberOfAssetsInTransfer = type1 === 'Transfer' ? tx.mosaics.length : null;
 
       resolve({
@@ -380,17 +387,22 @@ const formatTransaction = (
         recipient,
         recipientTiny,
         fee: tx.maxFee.compact(),
-        blockNumber: tx.transactionInfo.height.compact(),
+
+        // MAX_SAFE_INTEGER is a lazy sorting trick
+        blockNumber: tx.transactionInfo.height
+          ? tx.transactionInfo.height.compact() : Number.MAX_SAFE_INTEGER,
         type2,
         transactionHash: tx.transactionInfo.hash,
-        id: tx.transactionInfo.id,
+        // Necessary for duplicates busting by removeDuplicatesAndSortByBlockNumber
+        id: tx.transactionInfo.id || tx.transactionInfo.hash,
         body,
         type1,
         mainProps,
         numberOfAssetsInTransfer,
         deadline: formatDate(new Date(tx.deadline.value)),
         timestamp: tx.timestamp,
-        date: formatDate(new Date(tx.timestamp * 1000)),
+        date: tx.timestamp ? formatDate(new Date(tx.timestamp * 1000)) : false,
+        rejected: !!tx.rejectionReason,
       });
     } catch (error) {
       reject(error);
@@ -404,16 +416,21 @@ export const formatTransactions = (
     const formatted = await Promise.all(transactions.map(tx => new Promise(async (res, rej) => {
         try {
           if (tx.innerTransactions) {
-            const formattedTransactionsPromises = tx.innerTransactions.map((t) => {
+            const formattedTransactionsPromises = tx.innerTransactions.map((t, index) => {
                 if (!t.transactionInfo) t.transactionInfo = {};
                 t.transactionInfo.hash = tx.transactionInfo.hash;
                 t.transactionInfo.height = tx.transactionInfo.height;
-                t.timestamp = tx.timestamp;
 
                 t.aggregate = txTypeNameFromTypeId(
                   tx.type,
                   tx.innerTransactions.length,
                 );
+
+                t.timestamp = tx.rejectionReason ? false : tx.timestamp;
+                t.rejectionReason = tx.rejectionReason;
+                // Necessary for duplicates busting by removeDuplicatesAndSortByBlockNumber
+                if (tx.rejectionReason) t.transactionInfo.id = `${tx.tx.transactionInfo.hash}${index}`;
+
                 // @TODO add a numberOfTransactionsInAggregate property
                 return formatTransaction(t, namedAssets);
             });
@@ -433,8 +450,8 @@ export const formatTransactions = (
 });
 
 export const removeDuplicatesAndSortByBlockNumber = (array) => {
-    const noDuplicate = array.filter((item, index, self) => index === self.findIndex(t => (
-        t.place === array.place && t.id === item.id
-    )));
-    return noDuplicate.sort((a, b) => b.blockNumber - a.blockNumber);
+  const noDuplicate = array.filter((item, index, self) => index === self.findIndex(t => (
+      t.place === array.place && t.id === item.id
+  )));
+  return noDuplicate.sort((a, b) => b.blockNumber - a.blockNumber);
 };
