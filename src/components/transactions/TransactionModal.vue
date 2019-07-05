@@ -49,12 +49,19 @@
                 </span>
               </div>
 
-              <span class="clearfix bold">
-                {{ $t('Transaction-hash') }}
-              </span>
-              <span class="clearfix  mb-2">
-                {{ tx.transactionHash }}
-              </span>
+              <a
+                :href="application.activeNode
+                  ? `${application.activeNode}/transaction/${tx.transactionHash}/status`
+                  : '#'"
+                target="_blank"
+              >
+                <span class="clearfix bold">
+                  {{ $t('Transaction-hash') }}
+                </span>
+                <span class="clearfix  mb-2">
+                  {{ tx.transactionHash }}
+                </span>
+              </a>
 
               <span class="clearfix bold">
                 {{ $t('Signer') }}
@@ -129,6 +136,7 @@ export default {
   computed: {
     ...mapState([
       'transactions',
+      'application',
     ], {
       transactions: state => state.transactions,
     }),
