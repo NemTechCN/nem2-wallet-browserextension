@@ -221,7 +221,7 @@ export default {
         const { address } = this.wallet.activeWallet.account;
         const unsignedTransactions = this.transactions;
 
-        const transactions = await this.signTransactions({
+        const transactions = await this.signAndHandleTransactions({
           transactions: this.transactions,
           wallet: this.wallet.activeWallet,
           generationHash: this.generationHash,
@@ -275,17 +275,20 @@ export default {
     },
 
 
-    signTransactions({
+    signAndHandleTransactions({
       transactions,
       wallet,
       generationHash,
       endpoint,
     }) {
+      // Sign transactions and send them to the store for them to be
+      // Announced as sent in snackbar, and declared as errored if
+      // Rejected by the node
       return new Promise(async (resolve, reject) => {
         const { account } = wallet;
         const signerPublicAccount = PublicAccount
           .createFromPublicKey(account.publicKey, NetworkType.MIJIN_TEST);
-        const t = transactions.map((tx, index, txs) => {
+        const preparedTransactions = transactions.map((tx, index, txs) => {
           if (tx.type === TransactionType.LOCK) return { tx, lockToSign: true };
 
           const signedTx = account.sign(tx, generationHash);
@@ -317,12 +320,11 @@ export default {
         });
 
         try {
-          const transactionsToFormat = t
-            .map(({ txWithHash }) => ({ ...txWithHash }));
-          const transactionsToAnnounce = t.map(({ signedTx }) => signedTx);
+          const transactionsToHandle = preparedTransactions.map(({ txWithHash }) => txWithHash);
+          const transactionsToAnnounce = preparedTransactions.map(({ signedTx }) => signedTx);
 
           this.$store.dispatch('transactions/HANDLE_ANNOUNCED_TRANSACTIONS', {
-            transactions: transactionsToFormat,
+            transactions: transactionsToHandle,
             wallet,
             generationHash,
           });
