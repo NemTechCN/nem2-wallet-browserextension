@@ -346,13 +346,13 @@ export default {
       txMaxFee: 0,
       txRecipient: '',
       userPrivateKey: '',
+      mosaics: [],
+      currentMosaicName: '',
+      currentMosaicAmount: '',
       signedTx: null,
       isDialogShow: false,
       dialogDetails: [],
       checkbox: false,
-      mosaics: [],
-      currentMosaicName: '',
-      currentMosaicAmount: '',
       currentGenerationHash: '',
       txHash: '',
       errorMessage: {},
@@ -428,6 +428,7 @@ export default {
         UInt64.fromUint(this.txMaxFee),
       );
       this.transactions = [transferTransaction];
+      this.resetFields();
     },
 
     addMosaic() {
@@ -454,6 +455,18 @@ export default {
     hideErrorMessage() {
       this.isShowErrorMessage = false;
     },
+
+    resetFields() {
+      this.txMessage = '';
+      this.txAmount = 0;
+      this.txMaxFee = 0;
+      this.txRecipient = '';
+      this.userPrivateKey = '';
+      this.mosaics = [];
+      this.currentMosaicName = '';
+      this.currentMosaicAmount = '';
+    },
+
     txSent(result) {
       this.txSendResults.push(result);
     },
