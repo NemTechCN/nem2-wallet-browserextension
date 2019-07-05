@@ -31,19 +31,23 @@
                 {{ tx.type2 }} {{ tx.type1 }}
               </h3>
 
-              <span class="clearfix bold">
-                ID
-              </span>
-              <span class="clearfix  mb-2">
-                {{ tx.id }}
-              </span>
+              <div v-if="!tx.rejected">
+                <span class="clearfix bold">
+                  ID
+                </span>
+                <span class="clearfix  mb-2">
+                  {{ tx.id }}
+                </span>
+              </div>
 
-              <span class="clearfix bold">
-                {{ $t('Block-Number') }}
-              </span>
-              <span class="clearfix  mb-2">
-                {{ tx.blockNumber.toLocaleString() }}
-              </span>
+              <div v-if="!tx.rejected && !tx.unconfirmed">
+                <span class="clearfix bold">
+                  {{ $t('Block-Number') }}
+                </span>
+                <span class="clearfix  mb-2">
+                  {{ tx.blockNumber.toLocaleString() }}
+                </span>
+              </div>
 
               <span class="clearfix bold">
                 {{ $t('Transaction-hash') }}
