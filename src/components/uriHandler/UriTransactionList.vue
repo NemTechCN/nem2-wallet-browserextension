@@ -23,6 +23,11 @@
         && transactions.length > 0"
       xs12
     >
+      <Errors
+        :watch-only-warning="true"
+        :application-warnings="false"
+        class="mb-4"
+      />
       <v-card>
         <v-toolbar
           card
@@ -120,8 +125,11 @@
             <v-spacer />
             <v-btn
               flat
-              :disabled="wallet.activeWallet.isWatchOnly"
-              @click="toggleDialog = true"
+              :disabled="!wallet.activeWallet
+                || wallet.activeWallet.walletType === walletTypes.WATCH_ONLY_WALLET"
+              @click.stop="wallet.activeWallet.isWatchOnly
+                ? showPasswordInput = true
+                : toggleDialog = true"
             >
               {{ $t('Accept-transaction') }}
             </v-btn>
@@ -182,17 +190,29 @@
         </template>
       </template>
     </Confirmation>
+    <PasswordInput
+      :visible="showPasswordInput"
+      :wallet-name="wallet.activeWallet.name"
+      :wallet-type="wallet.activeWallet.walletType"
+      @close="showPasswordInput = false"
+    />
   </v-layout>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import { QRCodeGenerator } from 'nem2-qr-library';
+import { walletTypes } from '../../infrastructure/wallet/wallet-types';
+
+import Errors from '../Errors.vue';
 import Confirmation from '../signature/Confirmation.vue';
+import PasswordInput from '../wallet/PasswordInput.vue';
 
 export default {
   components: {
+    Errors,
     Confirmation,
+    PasswordInput,
   },
   props: {
     transactions: {
@@ -206,6 +226,8 @@ export default {
   },
   data() {
     return {
+      walletTypes,
+      showPasswordInput: false,
       toggleDialog: false,
       confirmationTitle: this.$t('Are-sure-you-want-to-accept-this'),
       body: this.$t('This-transaction-came-from-a-URI'),

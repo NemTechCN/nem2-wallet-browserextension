@@ -53,7 +53,7 @@
         <v-text-field
           v-model="namespaceName"
           class="my-2 pa-0"
-          :label="$t('Namespace-name')"
+          :label="$t('Namespace-Name')"
           :hint="namespaceNameHints(namespaceType)"
           required
         />

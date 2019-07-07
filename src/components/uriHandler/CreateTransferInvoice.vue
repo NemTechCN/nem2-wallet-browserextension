@@ -26,11 +26,6 @@
       wrap
     >
       <v-flex xs12>
-        <Errors
-          :watch-only-warning="true"
-          :application-warnings="false"
-          class="mb-4"
-        />
         <v-card
           v-if="wallet.wallets.length > 0
             && wallet.activeWallet"
@@ -266,12 +261,10 @@ import { mapState } from 'vuex';
 import { txTypeNameFromTypeId } from '../../infrastructure/transactions/transactions-types';
 import store from '../../store/index';
 
-import Errors from '../Errors.vue';
 import UriTransactionList from './UriTransactionList.vue';
 
 export default {
   components: {
-    Errors,
     UriTransactionList,
   },
   store,

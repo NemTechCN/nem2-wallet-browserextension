@@ -416,6 +416,7 @@ export default {
         UInt64.fromUint(this.txMaxFee),
       );
       this.transactions = [transferTransaction];
+      this.resetFields();
     },
 
     addMosaic() {
