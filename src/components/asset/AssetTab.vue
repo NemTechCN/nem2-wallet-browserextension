@@ -28,6 +28,7 @@ if sta// Copyright (C) 2019 Contributors as noted in the AUTHORS file
       </v-flex>
     </div>
     <div v-if="assets.length > 0">
+      <v-switch v-model="showExpired" :label="$t('show-expired-assets')" />
       <v-list
         three-line
       >
@@ -35,6 +36,7 @@ if sta// Copyright (C) 2019 Contributors as noted in the AUTHORS file
           <v-layout
             :key="currentAsset.id"
             column
+            v-show="showExpired || isNotExpired(currentAsset)"
           >
             <v-list-group
               :key="i"
@@ -174,9 +176,17 @@ export default {
       showModifyAsset: false,
       showAssetAlias: false,
       activeAsset: { id: false, name: false },
+      showExpired: false,
     };
   },
   computed: mapState(['wallet', 'application']),
+  watch: {
+    showExpired: {
+      handler(e) {
+        this.updateShowExpired(e);
+      }
+    }
+  },
   methods: {
     spawnAliasTransaction(mosaic) {
       this.activeAsset = { id: mosaic.id, name: mosaic.name };
@@ -197,6 +207,20 @@ export default {
       if (expiresIn > 0) return `${this.$t('Expires-in-blocks', { block: expiresIn.toLocaleString() })}.`;
       return `${this.$t('Expired-for-blocks', { block: (expiresIn * -1).toLocaleString() })}.`;
     },
+
+    updateShowExpired(value) {
+      this.showExpired = value;
+    },
+
+    isNotExpired(mosaic) {
+      const { blockNumber } = this.application;
+      const { endHeight } = mosaic;
+      if (endHeight === 0) return true;
+      if (blockNumber <= 0 || typeof blockNumber !== 'number') return true;
+      const expiresIn = endHeight - blockNumber;
+      if (expiresIn > 0) return true;
+      return false; 
+    }
   },
 };
 </script>
