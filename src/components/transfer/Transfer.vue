@@ -89,11 +89,11 @@
                   />
 
                   <v-checkbox
-                    v-model="checkbox"
+                    v-model="sendOtherAssets"
                     :label="$t('Sending-other-assets?')"
                   />
                   <v-flex
-                    v-if="checkbox"
+                    v-if="sendOtherAssets"
                     sm
                     class="ma-4"
                   >
@@ -352,7 +352,7 @@ export default {
       signedTx: null,
       isDialogShow: false,
       dialogDetails: [],
-      checkbox: false,
+      sendOtherAssets: false,
       currentGenerationHash: '',
       txHash: '',
       errorMessage: {},
