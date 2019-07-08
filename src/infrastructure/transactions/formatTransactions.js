@@ -22,6 +22,7 @@
 
 import { TransactionType, Address } from 'nem2-sdk';
 import { txTypeNameFromTypeId } from './transactions-types';
+import FormattedTransaction from './FormattedTransaction';
 
 
 export const formatDate = (d) => {
@@ -421,7 +422,7 @@ export const formatTransactions = (
                 t.transactionInfo.hash = tx.transactionInfo.hash;
                 t.transactionInfo.height = tx.transactionInfo.height;
 
-                t.aggregate = txTypeNameFromTypeId(
+                t.aggregateProperties = txTypeNameFromTypeId(
                   tx.type,
                   tx.innerTransactions.length,
                 );
@@ -437,6 +438,9 @@ export const formatTransactions = (
 
             res(await Promise.all(formattedTransactionsPromises));
           } else {
+            if (tx.type === TransactionType.TRANSFER) {
+              console.log(new FormattedTransaction(tx, namedAssets));
+            }
             res([await formatTransaction(tx, namedAssets)]);
           }
         } catch (error) {
