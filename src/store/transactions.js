@@ -304,7 +304,8 @@ const actions = {
       });
       dispatch(
         'transactions/TRIGGER_ERRORED_TRANSACTION_SNACKBAR',
-        { type1: rejectionReason, transaction },
+        // @TODO: Don't use "type" as a key
+        { type: rejectionReason, transaction },
         { root: true },
       );
     } catch (error) {
@@ -458,21 +459,23 @@ const actions = {
   },
 
   TRIGGER_TRANSACTION_SNACKBAR({ dispatch }, { tx, status }) {
-    const type1 = tx.type1 || txTypeNameFromTypeId(Number(tx.type));
+    const type = tx.type ? txTypeNameFromTypeId(Number(tx.type)) : tx.properties.type;
     dispatch(
       'application/SET_SNACKBAR_TEXT',
-      { bool: true, text: `New ${type1} ${status}!` },
+      { bool: true, text: `New ${type} ${status}!` },
       { root: true },
     );
   },
 
+  // @TODO: remove in favor of adding a color argument to application/SET_SNACKBAR_TEXT
   TRIGGER_ERRORED_TRANSACTION_SNACKBAR({ dispatch, commit }, tx) {
     commit('setErroredTransactions', tx.transaction);
     dispatch(
       'application/SET_SNACKBAR_TEXT',
       {
         bool: true,
-        text: `${txTypeNameFromTypeId(Number(tx.transaction.type))} transaction announced failed for ${tx.type1}`,
+        // @TODO: don't use type as a key
+        text: `${txTypeNameFromTypeId(Number(tx.transaction.type))} announce failed for: ${tx.type}`,
         color: 'red',
       },
       { root: true },
