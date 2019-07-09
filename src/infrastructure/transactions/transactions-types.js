@@ -77,7 +77,7 @@ export const txTypeNameFromTypeId = (typeId) => {
   case TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC: return 'Mod. account mosaic';
   case TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE: return 'Mod. account entity type';
   case TransactionType.LINK_ACCOUNT: return 'Link account';
-  default: return new Error('The transaction ID was not found');
+  default: return new Error('The transaction typeId was not found');
   }
 };
 
