@@ -440,6 +440,7 @@ export const formatTransactions = (
           } else {
             if (tx.type === TransactionType.TRANSFER) {
               console.log(new FormattedTransaction(tx, namedAssets));
+              res([new FormattedTransaction(tx, namedAssets)]);
             }
             res([await formatTransaction(tx, namedAssets)]);
           }
@@ -455,7 +456,7 @@ export const formatTransactions = (
 
 export const removeDuplicatesAndSortByBlockNumber = (array) => {
   const noDuplicate = array.filter((item, index, self) => index === self.findIndex(t => (
-      t.place === array.place && t.id === item.id
+      t.place === array.place && t.properties.customId === item.properties.customId
   )));
-  return noDuplicate.sort((a, b) => b.blockNumber - a.blockNumber);
+  return noDuplicate.sort((a, b) => b.properties.customId - a.properties.customId);
 };

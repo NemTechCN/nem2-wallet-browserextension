@@ -1,8 +1,15 @@
 import { Address } from 'nem2-sdk';
-import { formatDate } from '../formattingHelpers';
-import CustomId from '../CustomId';
+import { formatDate } from './formattingHelpers';
+import { txTypeNameFromTypeId } from './transactions-types';
+import CustomId from './CustomId';
 
-export default class {
+/**
+ *
+ * Formats the transactions properties that are common to all transactions
+ *
+ */
+
+export default class TxCommonProperties {
   constructor(tx) {
     this.customId = new CustomId(tx).create();
     this.transactionHash = tx.transactionInfo.hash;
@@ -14,5 +21,6 @@ export default class {
     this.blockNumber = tx.transactionInfo.height ? tx.transactionInfo.height.compact() : false;
     this.deadline = formatDate(new Date(tx.deadline.value));
     this.date = tx.timestamp ? formatDate(new Date(tx.timestamp * 1000)) : false;
+    this.type = txTypeNameFromTypeId(tx.type);
   }
 }

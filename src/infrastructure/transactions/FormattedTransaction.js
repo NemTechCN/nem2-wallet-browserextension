@@ -1,13 +1,16 @@
-import TxCommonProperties from './transactionBodyInterfaces/TxCommonProperties';
-import TxSpecificPropertiesFactory from './TxSpecificPropertiesFactory';
+import TxCommonProperties from './TxCommonProperties';
+import txSpecificPropertiesFactory from './TxSpecificPropertiesFactory';
 
-// Formatted transaction
-export default class {
+/**
+ *
+ * Formats a transaction before injection in the view components
+ *
+ */
+
+export default class FormattedTransactions {
   constructor(tx, namedAssets) {
     this.properties = new TxCommonProperties(tx);
-    const { mainProps, body } = new TxSpecificPropertiesFactory(tx, namedAssets);
-    this.mainProperties = mainProps;
-    this.body = body;
+    this.specificProperties = txSpecificPropertiesFactory(tx, namedAssets);
   }
 }
 
