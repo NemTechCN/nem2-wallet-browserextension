@@ -273,5 +273,7 @@
   "Need-to-check-this-address-again": "Need to check this address again in the future? Store this address as a watch-only wallet!",
   "name-leave-blank-use-address": "name (leave blank to use the address as a name)",
   "store-as-watch-only-wallet": "store as watch-only wallet",
+  "Add-cosignatory": "Add a cosignatory",
+  "Wallet-multisig-accounts": "Wallet's multisig accounts",
   "show-expired-assets": "Show Expired Assets"
 }

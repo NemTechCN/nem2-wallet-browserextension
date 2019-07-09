@@ -19,7 +19,7 @@
   <v-card>
     <v-card-title>
       <span class="title">
-        {{ $t('"Get-address-from-public-key"') }}
+        {{ $t('Get-address-from-public-key') }}
       </span>
     </v-card-title>
     <v-card-text>

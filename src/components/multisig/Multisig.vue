@@ -48,104 +48,73 @@
                 {{ $t('Multisig-actions') }}
               </v-toolbar-title>
             </v-toolbar>
-
-            <v-tabs
-              v-model="activeTab"
-              fixed-tabs
-              slider-color="primary"
-              class="mb-4"
-            >
-              <v-tab>
-                {{ $t('Convert-To-Multisig') }}
-              </v-tab>
-              <v-tab>
-                {{ $t('Modify-Multisigs') }}
-              </v-tab>
-              <v-tab>
-                {{ $t('Cosign-Multisig-Transactions') }}
-              </v-tab>
-              <v-tab-item
-                v-if="!(wallet.wallets.length > 0
-                  && wallet.activeWallet
-                  && !wallet.activeWallet.isWatchOnly)"
+            <v-card-text>
+              <v-tabs
+                v-model="activeTab"
+                fixed-tabs
+                slider-color="primary"
               >
-                <v-layout
-                  row
-                  pb-2
-                  mt-4
+                <v-tab>
+                  {{ $t('Convert-To-Multisig') }}
+                </v-tab>
+                <v-tab>
+                  {{ $t('Modify-Multisigs') }}
+                </v-tab>
+                <v-tab>
+                  {{ $t('Cosign-Multisig-Transactions') }}
+                </v-tab>
+
+                <v-tab-item
+                  v-if="wallet.wallets.length > 0
+                    && wallet.activeWallet"
                 >
-                  <v-container
-                    fluid
-                    pl-5
-                    pr-5
-                    ma-0
-                  >
-                    <v-layout
-                      column
-                      xs12
-                    >
-                      <v-flex
-                        xs12
-                      >
-                        <Errors
-                          :watch-only-warning="true"
-                          :application-warnings="false"
-                          class="mb-4"
-                        />
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-                </v-layout>
-              </v-tab-item>
+                  <v-card flat>
+                    <MultisigConversion
+                      @closeComponent="multisigConversion = false"
+                    />
+                  </v-card>
+                </v-tab-item>
 
-              <v-tab-item
-                v-if="wallet.wallets.length > 0
-                  && wallet.activeWallet
-                  && !wallet.activeWallet.isWatchOnly"
-              >
-                <v-card flat>
-                  <MultisigConversion
-                    @closeComponent="multisigConversion = false"
-                  />
-                </v-card>
-              </v-tab-item>
+                <v-tab-item
+                  v-if="wallet.wallets.length > 0
+                    && wallet.activeWallet"
+                >
+                  <v-card flat>
+                    <MultisigModification
+                      class="my-2"
+                      @closeComponent="multisigModification = false"
+                    />
+                  </v-card>
+                </v-tab-item>
 
-              <v-tab-item
-                v-if="wallet.wallets.length > 0
-                  && wallet.activeWallet
-                  && !wallet.activeWallet.isWatchOnly"
-              >
-                <v-card flat>
-                  <MultisigModification
-                    class="my-2"
-                    @closeComponent="multisigModification = false"
-                  />
-                </v-card>
-              </v-tab-item>
+                <v-tab-item
+                  v-if="wallet.wallets.length > 0
+                    && wallet.activeWallet"
+                >
+                  <v-card flat>
+                    <MultisigCosignation
+                      :loading-get-multisig-info="multisig.loading_getMultisigInfo"
+                    />
+                  </v-card>
+                </v-tab-item>
+              </v-tabs>
+            </v-card-text>
 
-              <v-tab-item
-                v-if="wallet.wallets.length > 0
-                  && wallet.activeWallet
-                  && !wallet.activeWallet.isWatchOnly"
-              >
-                <v-card flat>
-                  <MultisigCosignation
-                    :loading-get-multisig-info="multisig.loading_getMultisigInfo"
-                  />
-                </v-card>
-              </v-tab-item>
-
-              <!-- <v-tab-item>
+            <!-- <v-tab-item>
                 <v-card flat>
                   <OtherMultisigTransactions
                           :loading-get-multisig-info="multisig.loading_getMultisigInfo"
                   />
                 </v-card>
               </v-tab-item> -->
-            </v-tabs>
           </v-card>
 
-          <MultisigAccountInfo class="mb-4" />
+          <MultisigAccountInfo
+            v-if="wallet.wallets.length > 0
+              && wallet.activeWallet
+              && !application.error"
+            class="mt-4 mb-4"
+          />
         </v-flex>
       </v-layout>
     </v-container>

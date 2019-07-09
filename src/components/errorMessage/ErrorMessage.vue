@@ -23,7 +23,7 @@
         flat
         @click="hideErrorMessage"
       >
-        i see
+        OK
       </v-btn>
     </v-card-actions>
   </v-card>

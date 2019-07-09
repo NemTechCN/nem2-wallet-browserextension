@@ -61,8 +61,8 @@
                   {{ $t('account-public-key') }}:
                 </div>
                 <div class="clearfix">
-                  {{ typeof multisig.multisigInfo[wallet.activeWallet.name].account == 'undefined'
-                    ?'':multisig.multisigInfo[wallet.activeWallet.name].account.publicKey }}
+                  {{ multisig.multisigInfo[wallet.activeWallet.name].account
+                    ? '' : multisig.multisigInfo[wallet.activeWallet.name].account.publicKey }}
                 </div>
               </div>
 

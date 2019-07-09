@@ -16,10 +16,15 @@
 
 <template>
   <v-layout
-    column
-    class="mt-2 mb-3"
+    row
+    pb-2
+    mt-4
   >
-    <v-container>
+    <v-container
+      fluid
+      pa-0
+      ma-0
+    >
       <v-layout
         row
         wrap
@@ -32,170 +37,138 @@
             :indeterminate="true"
           />
         </v-flex>
-      </v-layout>
-      <v-layout row>
-        <v-flex xs12>
-          <v-text-field
-            v-model="minApprovalDelta"
-            error-count="1"
-            :label="$t('min-approval')"
-            type="number"
-            required
-            number
-          />
-        </v-flex>
-      </v-layout>
-
-      <v-layout>
-        <v-flex xs12>
-          <v-text-field
-            v-model="minRemovalDelta"
-            class="ma-0 pa-0"
-            :label="$t('min-removal')"
-            type="number"
-            required
-            number
-          />
-        </v-flex>
-      </v-layout>
-      <v-layout row>
-        <v-flex xs12>
-          <v-text-field
-            v-model="maxFee"
-            :v-else="$t('Max-Fee')"
-          />
-        </v-flex>
-      </v-layout>
-      <v-layout>
-        <v-flex xs2>
-          <v-subheader>
-            {{ $t('Generation-Hash') }}
-          </v-subheader>
-        </v-flex>
-        <v-flex xs9>
-          <v-text-field
-            v-model="generationHash"
-            class="ma-0 pa-0"
-            :label="$t('Generation-Hash')"
-            disabled
-            required
-            solo
-          />
-        </v-flex>
-      </v-layout>
-      <v-layout>
-        <v-flex sm>
-          <v-layout row>
-            <v-flex xs2>
-              <v-subheader>cosigner's publickey</v-subheader>
-            </v-flex>
-            <v-flex xs8>
+        <v-flex
+          v-if="!multisig.loading_getMultisigInfo"
+          xs12
+        >
+          <v-card>
+            <v-card-text>
+              <v-text-field
+                v-model="minApprovalDelta"
+                error-count="1"
+                :label="$t('min-approval')"
+                type="number"
+                required
+                number
+              />
+              <v-text-field
+                v-model="minRemovalDelta"
+                class="ma-0 pa-0"
+                :label="$t('min-removal')"
+                type="number"
+                required
+                number
+              />
+              <v-text-field
+                v-model="maxFee"
+                :label="$t('Max-Fee')"
+              />
+              <v-text-field
+                v-model="generationHash"
+                class="ma-0 pa-0"
+                :label="$t('Generation-Hash')"
+                disabled
+                required
+              />
               <v-text-field
                 v-model="currentPublicKey"
                 :label="$t('New-cosignatory-s-public-key')"
-                solo
               />
-            </v-flex>
-            <v-flex xs2>
-              <v-btn
-                :disabled="currentPublicKey === ''"
-                color="primary"
-                @click="addPublicKey"
-              >
-                <v-icon>add</v-icon>
-              </v-btn>
-            </v-flex>
-          </v-layout>
 
-          <template v-for="(publicKey, index) in publicKeyList">
-            <v-list
-              :key="index"
-              two-line
-            >
-              <v-list-tile>
-                <v-list-tile-action>
-                  <v-icon>style</v-icon>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                  {{ $t('Cosignatory-s-public-key') }}:{{ index + 1 }}
-                  <br>
-                  {{ publicKey }}
-                </v-list-tile-content>
+              <p class="text-xs-right">
                 <v-btn
-                  fab
-                  small
-                  color="error"
-                  @click="removeCosignatory(index)"
+                  :disabled="currentPublicKey === ''"
+                  color="primary"
+                  align-end
+                  @click="addPublicKey"
                 >
-                  <v-icon>remove</v-icon>
+                  {{ $t('Add-cosignatory') }}
                 </v-btn>
-              </v-list-tile>
-            </v-list>
-          </template>
+              </p>
+
+              <v-list two-line>
+                <v-list-tile
+                  v-for="(publicKey, index) in publicKeyList"
+                  :key="index"
+                >
+                  <v-list-tile-action>
+                    <v-icon>style</v-icon>
+                  </v-list-tile-action>
+                  <v-list-tile-content>
+                    {{ $t('Cosignatory-s-public-key') }}:{{ index + 1 }}
+                    <br>
+                    {{ publicKey }}
+                  </v-list-tile-content>
+                  <v-btn
+                    fab
+                    small
+                    color="error"
+                    @click="removeCosignatory(index)"
+                  >
+                    <v-icon>remove</v-icon>
+                  </v-btn>
+                </v-list-tile>
+              </v-list>
+
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  :disabled="!wallet.activeWallet.walletType === walletTypes.WATCH_ONLY_WALLET"
+                  @click="showDialog"
+                >
+                  {{ $t('Send-Transaction') }}
+                </v-btn>
+              </v-card-actions>
+              <SendConfirmation :tx-send-data="txSendResults" />
+            </v-card-text>
+          </v-card>
         </v-flex>
       </v-layout>
-      <v-layout>
-        <v-layout
-          v-if="wallet.activeWallet.name"
-          row
-          justify-space-around
-          align-center
-        >
-          <v-btn
-            :disabled="!(typeof multisig
-              .multisigInfo[wallet.activeWallet.name].account === 'undefined'
-              || !multisig.multisigInfo[wallet.activeWallet.name].isMultisig())"
-            @click="showDialog"
-          >
-            {{ $t('Send') }}
-          </v-btn>
-        </v-layout>
-
-        <Confirmation
-          v-model="isDialogShow"
-          :transactions="transactions"
-          :generation-hash="generationHash"
-          :transaction-type="TransactionType.AGGREGATE_BONDED"
-          @sent="txSent"
-          @error="txError"
-        >
-          <v-list>
-            <v-list-tile
-              v-for="detail in dialogDetails"
-              :key="detail.key"
-            >
-              <v-list-tile-action>
-                <v-icon>{{ detail.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ detail.key }}: {{ detail.value }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-
-            <v-list-tile
-              v-for="(publicKey,index) in publicKeyList"
-              :key="index"
-            >
-              <v-list-tile-action>
-                <v-icon />
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ publicKey }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </Confirmation>
-      </v-layout>
-      <v-layout column>
-        <SendConfirmation
-          :tx-send-data="txSendResults"
-        />
-      </v-layout>
     </v-container>
+    <Confirmation
+      v-model="isDialogShow"
+      :transactions="transactions"
+      :generation-hash="generationHash"
+      :transaction-type="TransactionType.AGGREGATE_BONDED"
+      @sent="txSent"
+      @error="txError"
+    >
+      <v-list>
+        <v-list-tile
+          v-for="detail in dialogDetails"
+          :key="detail.key"
+        >
+          <v-list-tile-action>
+            <v-icon>{{ detail.icon }}</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ detail.key }}: {{ detail.value }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
+          v-for="(publicKey,index) in publicKeyList"
+          :key="index"
+        >
+          <v-list-tile-action>
+            <v-icon />
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ publicKey }}
+            </v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </Confirmation>
+    <PasswordInput
+      :visible="showPasswordInput"
+      :wallet-name="wallet.activeWallet.name"
+      :wallet-type="wallet.activeWallet.walletType"
+      @close="showPasswordInput = false"
+    />
     <v-dialog
       v-model="isShowErrorMessage"
       width="500"
@@ -225,6 +198,9 @@ import {
 } from 'nem2-sdk';
 import { mapState } from 'vuex';
 import ErrorMessage from '../../infrastructure/errorMessage/error-message';
+import { walletTypes } from '../../infrastructure/wallet/wallet-types';
+
+import PasswordInput from '../wallet/PasswordInput.vue';
 import ErrorMessageComponent from '../errorMessage/ErrorMessage.vue';
 import Confirmation from '../signature/Confirmation.vue';
 import SendConfirmation from '../signature/SendConfirmation.vue';
@@ -276,16 +252,20 @@ const multisigCoversionValidator = (pointer) => {
 export default {
   name: 'AssetCreation',
   components: {
+    PasswordInput,
+    ErrorMessageComponent,
     Confirmation,
     SendConfirmation,
-    ErrorMessageComponent,
   },
   data() {
     return {
+      walletTypes,
       TransactionType,
       currentPublicKey: '',
       publicKeyList: [],
+      showPasswordInput: false,
       isDialogShow: false,
+      isShowErrorMessage: false,
       txSendResults: [],
       dialogDetails: [],
       transactions: [],
@@ -294,7 +274,6 @@ export default {
       maxFee: 0,
       currentGenerationHash: '',
       errorMessage: {},
-      isShowErrorMessage: false,
     };
   },
   computed: {
@@ -319,10 +298,11 @@ export default {
         this.publicKeyList.push(this.currentPublicKey);
         this.currentPublicKey = '';
       } else {
-        // eslint-disable-next-line no-console
         this.errorMessage.push(ErrorMessage.TOO_MUCH_COSIGNER);
       }
     },
+
+
     checkForm() {
       this.errorMessage = multisigCoversionValidator(this);
       if (this.errorMessage.disabled) {
@@ -331,11 +311,19 @@ export default {
       }
       return true;
     },
+
+
     showDialog() {
+      if (this.wallet.activeWallet.isWatchOnly) {
+        this.showPasswordInput = true;
+        return;
+      }
+
       if (!this.checkForm()) {
         this.isShowErrorMessage = true;
         return;
       }
+
       const { account } = this.wallet.activeWallet;
       const { minApprovalDelta, minRemovalDelta, publicKeyList } = this;
       const networkType = NetworkType.MIJIN_TEST;
@@ -381,8 +369,8 @@ export default {
           value: this.maxFee,
         },
         {
-          icon: this.$t('add'),
-          key: 'cosignatory-list',
+          icon: 'add',
+          key: this.$t('cosignatory-list'),
           value: '',
         },
       ];

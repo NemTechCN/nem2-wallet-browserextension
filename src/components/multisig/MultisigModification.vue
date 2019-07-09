@@ -3,10 +3,16 @@
     column
     class="mt-2 mb-3"
   >
-    <v-container v-show="!multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts">
+    <v-container
+      v-if="!multisig.multisigInfo[wallet.activeWallet.name]
+        || !multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
+    >
       {{ $t('This-account-does-not-own-any-multisig-to-modify') }}
     </v-container>
-    <v-container v-show="multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts">
+    <v-container
+      v-if="multisig.multisigInfo[wallet.activeWallet.name]
+        && multisig.multisigInfo[wallet.activeWallet.name].multisigAccounts"
+    >
       <v-layout
         row
         wrap
@@ -80,7 +86,7 @@
           <v-text-field
             v-model="generationHash"
             class="ma-0 pa-0"
-            :label="$t('Generation Hash')"
+            :label="$t('Generation-Hash')"
             required
           />
         </v-flex>
@@ -188,7 +194,8 @@
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-subheader>
-                    {{ cosignatory.modificationType == 0 ? 'add':'remove' }}
+                    {{ cosignatory.modificationType === MultisigCosignatoryModificationType.Add
+                      ? $t('Add') : $t('Remove') }}
                   </v-subheader>
                   {{ $t('Cosignatory-s-public-key') }}:
                   {{ cosignatory.cosignatoryPublicKey }}
@@ -256,7 +263,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>
-                  {{ cosignatory.modificationType == 0
+                  {{ cosignatory.modificationType === MultisigCosignatoryModificationType.Add
                     ? $t('Add'): $t('Remove') }}:
                   {{ cosignatory.cosignatoryPublicKey }}
                 </v-list-tile-title>
@@ -265,21 +272,26 @@
           </v-list>
         </Confirmation>
       </v-layout>
-
       <v-layout column>
         <SendConfirmation
           :tx-send-data="txSendResults"
         />
-        <v-dialog
-          v-model="isShowErrorMessage"
-          width="500"
-        >
-          <ErrorMessageComponent
-            :error-message="errorMessage"
-            @hideErrorMessage="hideErrorMessage"
-          />
-        </v-dialog>
       </v-layout>
+      <PasswordInput
+        :visible="showPasswordInput"
+        :wallet-name="wallet.activeWallet.name"
+        :wallet-type="wallet.activeWallet.walletType"
+        @close="showPasswordInput = false"
+      />
+      <v-dialog
+        v-model="isShowErrorMessage"
+        width="500"
+      >
+        <ErrorMessageComponent
+          :error-message="errorMessage"
+          @hideErrorMessage="hideErrorMessage"
+        />
+      </v-dialog>
     </v-container>
   </v-layout>
 </template>
@@ -301,10 +313,12 @@ import {
   NetworkCurrencyMosaic,
   UInt64,
 } from 'nem2-sdk';
+import ErrorMessage from '../../infrastructure/errorMessage/error-message';
+
+import PasswordInput from '../wallet/PasswordInput.vue';
 import Confirmation from '../signature/Confirmation.vue';
 import SendConfirmation from '../signature/SendConfirmation.vue';
 import ErrorMessageComponent from '../errorMessage/ErrorMessage.vue';
-import ErrorMessage from '../../infrastructure/errorMessage/error-message';
 
 const multisigModifyValidator = (pointer) => {
   const {
@@ -378,12 +392,15 @@ const multisigModifyValidator = (pointer) => {
 export default {
   name: 'ModifyMultisig',
   components: {
+    PasswordInput,
     Confirmation,
     SendConfirmation,
     ErrorMessageComponent,
   },
   data() {
     return {
+      MultisigCosignatoryModificationType,
+      showPasswordInput: false,
       isShowErrorMessage:false,
       errorMessage: {},
       transactionType: -1,
@@ -449,7 +466,9 @@ export default {
       const { isRemove, currentCosignatoryPublicKey } = this;
       const cosignerItem = {
         cosignatoryPublicKey: currentCosignatoryPublicKey,
-        modificationType: isRemove ? MultisigCosignatoryModificationType.Remove : MultisigCosignatoryModificationType.Add,
+        modificationType: isRemove
+          ? MultisigCosignatoryModificationType.Remove
+          : MultisigCosignatoryModificationType.Add
       }
       if (isRemove) {
         this.cosignatoryDeleteList.push(cosignerItem);
@@ -459,9 +478,13 @@ export default {
       this.cosignatoryList.push(cosignerItem);
       this.currentCosignatoryPublicKey = '';
     },
+
+
     removeCosignatory(index) {
       this.cosignatoryList.splice(index, 1);
     },
+
+
     checkForm() {
       this.errorMessage = multisigModifyValidator(this);
       if (this.errorMessage.disabled) {
@@ -470,7 +493,14 @@ export default {
       }
       return true;
     },
+
+
     showDialog() {
+      if (this.wallet.activeWallet.isWatchOnly) {
+        this.showPasswordInput = true;
+        return;
+      }
+
       if (!this.checkForm()) {
         return;
       }
@@ -478,12 +508,12 @@ export default {
       this.dialogDetails = [
         {
           icon: 'add',
-          key: this.$t('Removal Delta'),
+          key: this.$t('Removal-Delta'),
           value: this.removalDelta,
         },
         {
           icon: 'add',
-          key: this.$t('Approval Delta'),
+          key: this.$t('Approval-Delta'),
           value: this.approvalDelta,
         },
         {
@@ -508,6 +538,8 @@ export default {
         this.createComplete();
       }
     },
+
+
     createComplete() {
       const network = NetworkType.MIJIN_TEST;
       const minApprovalDelta = this.approvalDelta;
@@ -530,6 +562,8 @@ export default {
       );
       this.transactions = [aggregateTransaction];
     },
+
+    
     async createBondedModifyTransaction() {
       const { account } = this.wallet.activeWallet;
       const multisigPublicAccount = PublicAccount
