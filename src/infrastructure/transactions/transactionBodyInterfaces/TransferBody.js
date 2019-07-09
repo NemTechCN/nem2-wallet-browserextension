@@ -8,7 +8,7 @@ export default class TransferBody {
     const namedMosaicsWithAmount = tx.mosaics.length > 0
       ? tx.mosaics.map(mosaic => ({
         ...new NamedMosaic(mosaic, namedAssets),
-        amount: mosaic.amount.compact(),
+        amount: mosaic.amount.compact().toLocaleString(),
       }))
       : false;
 
