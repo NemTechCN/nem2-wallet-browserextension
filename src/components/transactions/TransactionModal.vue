@@ -51,7 +51,7 @@
                 </span>
               </div>
 
-              <div v-if="!tx.properties.rejectionReason && !tx.properties.unconfirmed">
+              <div v-if="!tx.properties.rejectionReason && !tx.unconfirmed">
                 <span class="clearfix bold">
                   {{ $t('Block-Number') }}
                 </span>
@@ -81,7 +81,7 @@
                 {{ tx.properties.signer }}
               </span>
 
-              <div v-if="tx.properties.recipient !== ''">
+              <div v-if="tx.properties.recipient">
                 <span class="clearfix bold">
                   {{ $t('Recipient') }}
                 </span>

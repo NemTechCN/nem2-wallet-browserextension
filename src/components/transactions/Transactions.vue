@@ -120,7 +120,7 @@
                     >
                       <td class="text-xs-left">
                         <span
-                          v-if="props.item.properties.unconfirmed"
+                          v-if="props.item.unconfirmed"
                           class="clearfix"
                         >
                           <pre>{{ $t('unconfirmed') }}</pre>
@@ -132,14 +132,14 @@
                           <pre>{{ $t('rejected') }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.properties.unconfirmed
+                          v-if="!props.item.unconfirmed
                             && !props.item.properties.rejectionReason"
                           class="clearfix"
                         >
                           <pre>{{ props.item.properties.blockNumber.toLocaleString() }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.properties.unconfirmed
+                          v-if="!props.item.unconfirmed
                             && !props.item.properties.rejectionReason"
                           class="clearfix"
                         >
@@ -180,7 +180,10 @@
                         <span class="clearfix">
                           <pre>{{ tinyAddress(props.item.properties.signer) }}</pre>
                         </span>
-                        <span class="clearfix">
+                        <span
+                          v-if="props.item.properties.recipient"
+                          class="clearfix"
+                        >
                           <pre>{{ tinyAddress(props.item.properties.recipient) }}</pre>
                         </span>
                       </td>
