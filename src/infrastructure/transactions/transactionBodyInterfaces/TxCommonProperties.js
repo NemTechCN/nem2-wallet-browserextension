@@ -1,6 +1,6 @@
 import { Address } from 'nem2-sdk';
-import { formatDate } from './formattingHelpers';
-import CustomId from './CustomId';
+import { formatDate } from '../formattingHelpers';
+import CustomId from '../CustomId';
 
 export default class {
   constructor(tx) {
@@ -14,6 +14,5 @@ export default class {
     this.blockNumber = tx.transactionInfo.height ? tx.transactionInfo.height.compact() : false;
     this.deadline = formatDate(new Date(tx.deadline.value));
     this.date = tx.timestamp ? formatDate(new Date(tx.timestamp * 1000)) : false;
-    return this;
   }
 }

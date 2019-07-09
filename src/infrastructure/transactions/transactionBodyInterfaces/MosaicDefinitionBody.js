@@ -8,7 +8,5 @@ export default class {
     this.levyMutable = tx.mosaicProperties.levyMutable;
     this.supplyMutable = tx.mosaicProperties.supplyMutable;
     this.transferable = tx.mosaicProperties.transferable;
-
-    return this;
   }
 }

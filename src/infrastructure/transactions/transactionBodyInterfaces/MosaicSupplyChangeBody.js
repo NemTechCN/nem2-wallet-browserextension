@@ -6,7 +6,5 @@ export default class {
     this.direction = this.direction === MosaicSupplyType.Increase
       ? 'Increase' : 'Decrease';
     this.delta = tx.delta.compact().toLocaleString();
-
-    return this;
   }
 }

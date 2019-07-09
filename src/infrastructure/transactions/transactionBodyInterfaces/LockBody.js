@@ -4,7 +4,5 @@ export default class {
     // @TODO: name
     this.lockedAssetId = tx.mosaic.id.toHex();
     this.duration = tx.duration.compact().toLocaleString();
-
-    return this;
   }
 }

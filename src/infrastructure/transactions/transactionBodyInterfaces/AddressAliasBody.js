@@ -6,7 +6,5 @@ export default class {
     this.address = new Address(tx.address.address).pretty();
     // @TODO: name
     this.namespaceId = tx.namespaceId.toHex().toLowerCase();
-
-    return this;
   }
 }

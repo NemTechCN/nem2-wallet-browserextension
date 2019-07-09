@@ -9,7 +9,5 @@ export default class {
     // @TODO: name
     this.parentNamespaceId = tx.namespaceType === NamespaceType.RootNamespace
       ? false : tx.parentId.toHex().toLowerCase();
-
-    return this;
   }
 }

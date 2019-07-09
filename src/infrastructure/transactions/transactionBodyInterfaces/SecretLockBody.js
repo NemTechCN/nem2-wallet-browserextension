@@ -5,6 +5,5 @@ export default class {
     this.lockedAssetId = tx.mosaic.id.toHex();
     this.duration = tx.duration.compact().toLocaleString();
     this.secret = tx.secret;
-    return this;
   }
 }

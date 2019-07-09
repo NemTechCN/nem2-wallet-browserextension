@@ -6,7 +6,5 @@ export default class {
     this.mosaicId = tx.mosaicId.toHex().toLowerCase();
     // @TODO: name
     this.namespaceName = tx.namespaceId.toHex().toLowerCase();
-
-    return this;
   }
 }

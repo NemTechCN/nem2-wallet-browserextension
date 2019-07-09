@@ -274,5 +274,6 @@
   "name-leave-blank-use-address": "name (leave blank to use the address as a name)",
   "store-as-watch-only-wallet": "store as watch-only wallet",
   "rejected": "rejected",
-  "show-expired-assets": "Show Expired Assets"
+  "show-expired-assets": "Show Expired Assets",
+  "Recent-Transactions": "Recent Transactions"
 }
