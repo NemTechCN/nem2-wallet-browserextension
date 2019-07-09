@@ -79,15 +79,6 @@
                 </span>
               </div>
 
-              <div v-if="tx.amount > 0">
-                <span class="clearfix bold">
-                  {{ $t('Amount') }}
-                </span>
-                <span class="clearfix  mb-2">
-                  {{ tx.amount.toLocaleString() }}
-                </span>
-              </div>
-
               <span class="clearfix bold">
                 {{ $t('Fee') }}
               </span>
