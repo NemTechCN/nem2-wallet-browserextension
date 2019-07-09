@@ -108,7 +108,7 @@
                     <tr
                       v-show="
                         transactions.transactionTypesFilters[
-                          props.item.type1.replace(/ /g, '_').replace(/\./g, '8')
+                          props.item.properties.type.replace(/ /g, '_').replace(/\./g, '8')
                         ]"
                       class="pointer"
                       @click.stop="
@@ -120,58 +120,68 @@
                     >
                       <td class="text-xs-left">
                         <span
-                          v-if="props.item.unconfirmed"
+                          v-if="props.item.properties.unconfirmed"
                           class="clearfix"
                         >
                           <pre>{{ $t('unconfirmed') }}</pre>
                         </span>
                         <span
-                          v-if="props.item.rejected"
+                          v-if="props.item.properties.rejectionReason"
                           class="clearfix"
                         >
                           <pre>{{ $t('rejected') }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.unconfirmed && !props.item.rejected"
+                          v-if="!props.item.properties.unconfirmed
+                            && !props.item.properties.rejectionReason"
                           class="clearfix"
                         >
-                          <pre>{{ props.item.blockNumber.toLocaleString() }}</pre>
+                          <pre>{{ props.item.properties.blockNumber.toLocaleString() }}</pre>
                         </span>
                         <span
-                          v-if="!props.item.unconfirmed && !props.item.rejected"
+                          v-if="!props.item.properties.unconfirmed
+                            && !props.item.properties.rejectionReason"
                           class="clearfix"
                         >
-                          <pre>{{ props.item.date }}</pre>
+                          <pre>{{ props.item.properties.date }}</pre>
                         </span>
                         <span class="clearfix">
-                          <pre>{{ props.item.type1 }}</pre>
+                          <pre>{{ props.item.properties.type }}</pre>
                         </span>
                         <span
-                          v-if="props.item.type2 !== ''"
+                          v-if="props.item.properties.aggregateProperties"
                           class="clearfix"
-                        >
-                          <pre>{{ props.item.type2 }}</pre>
+                        ><!-- @TODO: Update to variable -->
+                          <pre>{{ 'Aggregate' }}</pre>
                         </span>
                       </td>
                       <td class="text-xs-left">
                         <div
-                          v-for="(mainProp, index) in props.item.mainProps"
-                          :key="index"
+                          v-for="(propValue, propKey) in props.item.specificProperties.mainProps"
+                          :key="propKey"
                         >
                           <span
                             class="clearfix"
                             style="text-align:left"
                           >
-                            <pre>{{ mainProp.key }}&nbsp;{{ mainProp.value }}</pre>
+                            <pre>{{ propKey }}:&nbsp;{{ propValue }}</pre>
                           </span>
                         </div>
+                        <span
+                          v-if="props.item.properties.rejectionReason"
+                          class="clearfix"
+                          style="text-align:left"
+                        >
+                          <pre>{{ $t('Rejected-for') }}:&nbsp;{{ props
+                            .item.properties.rejectionReason }}</pre>
+                        </span>
                       </td>
                       <td class="text-xs-left">
                         <span class="clearfix">
-                          <pre>{{ props.item.signerTiny }}</pre>
+                          <pre>{{ tinyAddress(props.item.properties.signer) }}</pre>
                         </span>
                         <span class="clearfix">
-                          <pre>{{ props.item.recipientTiny }}</pre>
+                          <pre>{{ tinyAddress(props.item.properties.recipient) }}</pre>
                         </span>
                       </td>
                     </tr>
@@ -208,6 +218,7 @@
 import { mapState } from 'vuex';
 import store from '../../store/index';
 import TransactionModal from './TransactionModal.vue';
+import { tinyAddress } from '../../infrastructure/transactions/formattingHelpers';
 import { GET_TRANSACTIONS_MODES } from '../../infrastructure/transactions/transactions-types';
 import WoWalletCreationDialog from '../wallet/WoWalletCreationDialog.vue';
 import TransactionListFilters from './transactionListFilters.vue';
@@ -260,6 +271,7 @@ export default {
       showFilters: false,
       showWoWalletCreationDialog: false,
       showTransactionModal: false,
+      tinyAddress,
     };
   },
   computed: {

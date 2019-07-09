@@ -275,5 +275,6 @@
   "store-as-watch-only-wallet": "store as watch-only wallet",
   "rejected": "rejected",
   "show-expired-assets": "Show Expired Assets",
-  "Recent-Transactions": "Recent Transactions"
+  "Recent-Transactions": "Recent Transactions",
+  "Rejected-for": "Rejected for"
 }

@@ -27,31 +27,42 @@
         <v-card>
           <v-card-title primary-title>
             <div class="monospaced">
+              <!-- @TODO: aggregate -->
               <h3 class="headline mb-0">
-                {{ tx.type2 }} {{ tx.type1 }}
+                {{ tx.properties.type }} {{ tx.properties.aggregateProperties
+                  ?  ` in Aggregate Transanction [x/x]` : ''}}
               </h3>
 
-              <div v-if="!tx.rejected">
+              <div v-if="tx.properties.rejectionReason">
+                <span class="clearfix bold">
+                  {{ $t('Rejected-for') }}
+                </span>
+                <span class="clearfix  mb-2">
+                  {{ tx.properties.rejectionReason }}
+                </span>
+              </div>
+
+              <div v-if="!tx.properties.rejectionReason">
                 <span class="clearfix bold">
                   ID
                 </span>
                 <span class="clearfix  mb-2">
-                  {{ tx.id }}
+                  {{ tx.properties.id }}
                 </span>
               </div>
 
-              <div v-if="!tx.rejected && !tx.unconfirmed">
+              <div v-if="!tx.properties.rejectionReason && !tx.properties.unconfirmed">
                 <span class="clearfix bold">
                   {{ $t('Block-Number') }}
                 </span>
                 <span class="clearfix  mb-2">
-                  {{ tx.blockNumber.toLocaleString() }}
+                  {{ tx.properties.blockNumber.toLocaleString() }}
                 </span>
               </div>
 
               <a
                 :href="application.activeNode
-                  ? `${application.activeNode}/transaction/${tx.transactionHash}/status`
+                  ? `${application.activeNode}/transaction/${tx.properties.transactionHash}/status`
                   : '#'"
                 target="_blank"
               >
@@ -59,7 +70,7 @@
                   {{ $t('Transaction-hash') }}
                 </span>
                 <span class="clearfix  mb-2">
-                  {{ tx.transactionHash }}
+                  {{ tx.properties.transactionHash }}
                 </span>
               </a>
 
@@ -67,15 +78,15 @@
                 {{ $t('Signer') }}
               </span>
               <span class="clearfix  mb-2">
-                {{ tx.signer }}
+                {{ tx.properties.signer }}
               </span>
 
-              <div v-if="tx.recipient !== ''">
+              <div v-if="tx.properties.recipient !== ''">
                 <span class="clearfix bold">
                   {{ $t('Recipient') }}
                 </span>
                 <span class="clearfix  mb-2">
-                  {{ tx.recipient }}
+                  {{ tx.properties.recipient }}
                 </span>
               </div>
 
@@ -83,19 +94,43 @@
                 {{ $t('Fee') }}
               </span>
               <span class="clearfix  mb-2">
-                {{ tx.fee }}
+                {{ tx.properties.fee }}
               </span>
 
               <div
-                v-for="(bodyItem, index) in tx.body"
-                :key="index"
+                v-for="(propValue, propKey) in tx.specificProperties.body"
+                :key="propKey"
               >
+              <div v-if="!(propValue instanceof Array)">
                 <span class="clearfix bold">
-                  {{ bodyItem.key }}
+                  {{ propKey }}
                 </span>
                 <span class="clearfix  mb-2">
-                  {{ bodyItem.value }}
+                  {{ propValue }}
                 </span>
+              </div>
+              <div v-if="propValue instanceof Array">
+                <span class="clearfix bold">
+                  {{ propKey }}
+                </span>
+                <!-- @TODO: make a table held in a new component -->
+                <div
+                  v-for="(subPropValue, subPropKey) in propValue"
+                  :key="subPropKey"
+                >
+                  <div
+                    v-for="(subPropItemValue, subItemPropKey) in subPropValue"
+                    :key="subItemPropKey"
+                  >
+                    <span class="clearfix bold">
+                      {{ subItemPropKey }}
+                    </span>
+                    <span class="clearfix  mb-2">
+                      {{ subPropItemValue }}
+                    </span>
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
           </v-card-title>
