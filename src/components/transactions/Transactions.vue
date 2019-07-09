@@ -230,7 +230,7 @@ export default {
     title: {
       type: String,
       default() {
-        return 'Recent Transactions';
+        return this.$t('Recent-Transactions');
       },
     },
   },
