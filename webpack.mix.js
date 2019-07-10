@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const mix = require('laravel-mix');
 const TerserPlugin = require('terser-webpack-plugin');
 
