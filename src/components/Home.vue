@@ -34,6 +34,9 @@
           xs12
         >
           <Errors style="margin-bottom:35px !important" />
+          <span v-if="wallet.wallets.length === 0">
+            A wallet should be selected to visualize this page
+          </span>
           <v-card
             v-if="
               wallet.wallets.length > 0 &&
