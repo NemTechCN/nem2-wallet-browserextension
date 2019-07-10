@@ -1,73 +1,22 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import Home from '../../src/components/Home.vue';
-import {
-  transactionTypesFilters,
-} from '../../src/infrastructure/transactions/transactions-types';
+import wallet from '../../src/store/wallet';
 
 describe('Home.vue', () => {
   Vue.use(Vuetify, {});
-  it('renders component', () => {
+  it('renders component when store/wallet state is default state', () => {
     const wrapper = shallowMount(Home, {
+      mocks: {
+        $t: msg => msg,
+      },
       computed: {
         wallet() {
-          return {
-            wallets: [],
-          };
+          return wallet.state;
         },
-        accountInfo() {
-          return {
-            accountInfo: false,
-            loading_getAccountInfo: false,
-          };
-        },
-        application() {
-          return {
-            error: false,
-            errorMessage: '',
-            listenerStatus: 'off',
-            listenerErrorMessage: false,
-            routeName: '',
-            darkMode: false,
-            showSnackbar: false,
-            snackbarText: '',
-            blockNumber: 'loading',
-            blocks: [],
-            activeNode: false,
-            generationHashes: false,
-            officialNodes: false,
-          };
-        },
-        transactions() {
-          return {
-            transactions: false,
-            erroredTransactions: [],
-            loading_getAccountTransactionsById: false,
-            transactionTypesFilters: transactionTypesFilters(),
-            activeTransaction: false,
-            createdURI: [],
-            receivedURI: [],
-          };
-        },
-        assets() {
-          return {
-            assets: false,
-            networkAssets: false,
-            loading_getMosaicsByAddress: false,
-          };
-        },
-        namespaces() {
-          return {
-            namespaces: false,
-            loading_getNamespacesByAddress: false,
-          };
-        },
-        QR() { return ''; },
-        ownedAssets() { return false; },
-        ownedNamespaces() { return false; },
       },
     });
-    expect(wrapper.html()).toContain('A wallet should be selected to visualize this page');
+    expect(wrapper.html()).toContain('A-wallet-should-be-selected-to-visualize-this-page');
   });
 });

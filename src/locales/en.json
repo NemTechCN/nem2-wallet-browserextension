@@ -275,5 +275,6 @@
   "store-as-watch-only-wallet": "store as watch-only wallet",
   "Add-cosignatory": "Add a cosignatory",
   "Wallet-multisig-accounts": "Wallet's multisig accounts",
-  "show-expired-assets": "Show Expired Assets"
+  "show-expired-assets": "Show Expired Assets",
+  "A-wallet-should-be-selected-to-visualize-this-page": "A-wallet-should-be-selected-to-visualize-this-page"
 }
